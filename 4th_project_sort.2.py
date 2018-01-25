@@ -9,28 +9,28 @@ for i in range(len_of_numbers):
 #  in the left - all the numbers that lower then the lats number in the list
 #  in the right - all the numbers that higher then the lats number in the list
 def quick_sort(list, start_location, stop_location):
-    indecator = list[stop_location]
-    gard = start_location
+    indicator = list[stop_location]
+    Guard = start_location
     for index_1 in range(start_location, stop_location):
-        if list[index_1] <= indecator:
-            list[index_1], list[gard] = list[gard], list[index_1]
-            gard += 1
-    list[stop_location], list[gard] = list[gard], list[stop_location]
+        if list[index_1] <= indicator:
+            list[index_1], list[Guard] = list[Guard], list[index_1]
+            Guard += 1
+    list[stop_location], list[Guard] = list[Guard], list[stop_location]
     # printing the process of sorting
     for index_2 in range(len_of_numbers):
         print('*' * numbers[index_2])
     print('\n' * 10)
 
-    return gard
+    return Guard
 
 
 #  function that calls to quick_sort function to split
 #  the list till it will be Completely sorted
 def sort_management(list, start_location, stop_location):
     if start_location < stop_location:
-        gard = quick_sort(list, start_location, stop_location)
-        sort_management(list, start_location, gard-1)
-        sort_management(list, gard + 1, stop_location)
+        Guard = quick_sort(list, start_location, stop_location)
+        sort_management(list, start_location, Guard-1)
+        sort_management(list, Guard + 1, stop_location)
 
 
 #  call to sort_management function in the first time with the list from
