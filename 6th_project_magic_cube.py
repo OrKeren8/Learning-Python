@@ -14,18 +14,34 @@ def user_selection():
 
 
 def cube_builder(length_of_rib):
-    empty_raw = []
     cube = []
-    raw_spot = 0
-    column_spot = length_of_rib//2
-    serial_number = 1
     # building an empty cube
     for index_1 in range(length_of_rib):
         list.append(cube, [])
         for index_2 in range(length_of_rib):
-            list.append(cube[index_1], '')
+            list.append(cube[index_1], '0')
+
     # fill the cube with numbers
-    cube[raw_spot][column_spot] = serial_number
+    raw_spot = 0
+    column_spot = length_of_rib // 2
+    serial_number = 1
+    # if the cube isn't full keep fill it
+    while serial_number < length_of_rib ** 2 +1:
+        cube[raw_spot][column_spot] = serial_number
+        last_raw_spot = raw_spot
+        raw_spot -= 1
+        if raw_spot == -1:
+            raw_spot = length_of_rib - 1
+        last_column_spot = column_spot
+        column_spot += 1
+        if column_spot == length_of_rib:
+            column_spot = 0
+        if cube[raw_spot][column_spot] != '0':
+            raw_spot = last_raw_spot + 1
+            if raw_spot == length_of_rib:
+                raw_spot = 0
+            column_spot = last_column_spot
+        serial_number += 1
     return cube
 
 
