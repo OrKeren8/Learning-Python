@@ -45,6 +45,8 @@ def cube_builder(length_of_rib):
     return cube
 
 
+# print the cube
 cube = cube_builder(user_selection())
 for i in range(len(cube)):
     print(cube[i])
+
