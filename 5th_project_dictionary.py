@@ -2,7 +2,7 @@ import time
 dictionary = {}
 
 user_select = 0
-while user_select != 4:
+while True:
     # getting from the user the number of the task he wants the program to do
     try:
         print("insert the number of the task you want me to do\n"
@@ -34,6 +34,8 @@ while user_select != 4:
     # page to the next operation
     time.sleep(2)
     print('\n' * 20)
+    if user_select == 4:
+        break
     user_select = 0
 print(dictionary)
 
