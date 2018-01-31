@@ -1,4 +1,5 @@
 class RankDetector:
+    limhok = 1
 
     def royal_flush(self, hand_nums, hand_suits):
         check = 0
