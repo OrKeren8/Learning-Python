@@ -1,3 +1,5 @@
+
+
 ranks = ['high card', 'one pair', 'two pairs',
          'three of kind', 'straight', 'flush',
          'full house', 'four of a kind', 'Straight Flush', 'royal flush']
@@ -5,6 +7,31 @@ left_hand_nums = []
 left_hand_suits = []
 right_hand_nums = []
 right_hand_suits = []
+
+
+def main():
+    with open('poker_hands.txt') as hands:
+        for line in hands:
+            list_of_line = convert_T_J_Q_K_A_to_nums(line)
+            # get the numbers and suits of each hand:
+            for i in range(0, 13, 3):
+                left_hand_nums.append(int(list_of_line[i]))
+                left_hand_suits.append(list_of_line[i+1])
+                right_hand_nums.append(int(list_of_line[i+15]))
+                right_hand_suits.append(list_of_line[i+16])
+            # call to the function that check the highest rank of the hand:
+            left_hand_rank = check_rank(left_hand_nums, left_hand_suits)
+            right_hand_rank = check_rank(right_hand_nums, right_hand_nums)
+            print(left_hand_rank)
+            print(right_hand_rank)
+            #
+            # need to take the ranks of hands and compare them
+            #
+            # clear hands for next round
+            right_hand_nums.clear()
+            right_hand_suits.clear()
+            left_hand_nums.clear()
+            left_hand_suits.clear()
 
 
 def convert_T_J_Q_K_A_to_nums(line):
@@ -24,27 +51,9 @@ def convert_T_J_Q_K_A_to_nums(line):
 
 
 def check_rank(hand_nums, hand_suits):
+    pass
+    # TODO: finish function
 
 
-with open('poker_hands.txt') as hands:
-    for line in hands:
-        list_of_line = convert_T_J_Q_K_A_to_nums(line)
-        # get the numbers and suits of each hand:
-        for i in range(0, 13, 3):
-            left_hand_nums.append(int(list_of_line[i]))
-            left_hand_suits.append(list_of_line[i+1])
-            right_hand_nums.append(int(list_of_line[i+15]))
-            right_hand_suits.append(list_of_line[i+16])
-        # call to the function that check the highest rank of the hand:
-        left_hand_rank = check_rank(left_hand_nums, left_hand_suits)
-        right_hand_rank = check_rank(right_hand_nums, right_hand_nums)
-        print(left_hand_rank)
-        print(right_hand_rank)
-        #
-        # need to take the ranks of hands and compare them
-        #
-        # clear hands for next round
-        right_hand_nums.clear()
-        right_hand_suits.clear()
-        left_hand_nums.clear()
-        left_hand_suits.clear()
+if __name__ == "__main__":
+    main()

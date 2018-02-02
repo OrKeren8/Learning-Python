@@ -1,5 +1,5 @@
 import datetime
-import time
+from time import sleep
 
 
 def get_birthday():
@@ -12,7 +12,6 @@ def get_birthday():
                 break
             else:
                 print('this is invalid year')
-
         except ValueError:
             print('you have to insert numbers only')
     return datetime.datetime(year, month, day, 23, 59, 59)
@@ -28,15 +27,13 @@ def check_remaining_time():
                 year = datetime.timedelta(365)
                 birth_day_date = birth_day_date + year
             print('this is your birth day!!! for the next - ', remaining_time, 'hours')
-            time.sleep(2)
+            sleep(2)
         elif remaining_time < datetime.timedelta(0):
             print("this isn't your current birthday date")
             birth_day_date = get_birthday()
         elif remaining_time > datetime.timedelta(1):
             print(remaining_time - datetime.timedelta(1))
-            time.sleep(2)
+            sleep(2)
 
 
 check_remaining_time()
-
-
