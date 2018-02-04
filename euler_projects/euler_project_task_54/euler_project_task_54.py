@@ -1,8 +1,5 @@
+from .detecting import RankDetector
 
-
-ranks = ['high card', 'one pair', 'two pairs',
-         'three of kind', 'straight', 'flush',
-         'full house', 'four of a kind', 'Straight Flush', 'royal flush']
 left_hand_nums = []
 left_hand_suits = []
 right_hand_nums = []
@@ -50,9 +47,16 @@ def convert_T_J_Q_K_A_to_nums(line):
     return list_of_line
 
 
-def check_rank(hand_nums, hand_suits):
-    pass
-    # TODO: finish function
+def check_rank(hand_nums, hand_suits):  # call to the functions that gives the rank of the hand a important values
+    best_rank = []  # the best case of the hand and important values on that case
+    rank_class = RankDetector(hand_nums, hand_suits)
+    first_function_rank = rank_class.flush_straight_comb()
+    second_function_rank = rank_class.x_of_a_kind()
+    if first_function_rank[0] > second_function_rank[4]:  # check which function found the best rank case in a hand
+        best_rank = first_function_rank
+    else:
+        best_rank = second_function_rank
+    return best_rank
 
 
 if __name__ == "__main__":

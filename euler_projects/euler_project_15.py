@@ -1,6 +1,5 @@
 import random
 
-
 max_x = 20
 max_y = 20
 x_value = 0
