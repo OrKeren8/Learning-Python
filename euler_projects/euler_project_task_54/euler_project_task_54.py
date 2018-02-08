@@ -31,7 +31,8 @@ def main():
             right_hand_suits.clear()
             left_hand_nums.clear()
             left_hand_suits.clear()
-        print(left)
+        print('left wins', left)
+        print('right wins', right)
 
 
 def convert_T_J_Q_K_A_to_nums(line):
