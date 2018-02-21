@@ -8,12 +8,12 @@ s_p = int(input('insert the serial of the prime number you want to find'))
 '''
 a loop that finds prime numbers and return a pesific one that the user wants
 '''
-while(c_s_p < s_p):
+while c_s_p < s_p:
     c_n += 1
     for div in range(1, c_n):
-        if (c_n % div == 0):
+        if c_n % div == 0:
             i = i+1
-    if (i<2):
+    if i < 2:
         c_s_p += 1
         print(c_s_p)
     i = 0
