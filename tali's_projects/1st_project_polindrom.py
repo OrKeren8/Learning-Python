@@ -8,6 +8,3 @@ while True:
 
     sequence = input('enter a sequence')
     print(is_palindrome(sequence))
-
-
-# Or loves Tali
