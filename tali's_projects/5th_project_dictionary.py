@@ -15,8 +15,12 @@ while True:
         print("i am sorry, that wasn't a number...")
     # if the task chose by the user do it
     if user_select == 1:
-        dictionary.update({input('the word in english'): input('the translation in hebrew')})
-        print('the word added Successfully')
+        english = input('the word in english')
+        hebrew = input('the translation in hebrew')
+        if (english in dictionary) is False:
+            dictionary.update({english: hebrew})
+        if (hebrew in dictionary) is False:
+            dictionary.update({hebrew: english})
     elif user_select == 2:
         search_the_word = str(input('write the word you want to search:'))
         if search_the_word in dictionary:
@@ -32,11 +36,12 @@ while True:
             print("the word isn't in the dictionary")
     # waiting for the user to read the answer and clearing the
     # page to the next operation
-    time.sleep(2)
-    print('\n' * 20)
+    time.sleep(0.5)
+    print('\n' * 10)
     if user_select == 4:
         break
     user_select = 0
-print(dictionary)
+for key in dictionary:
+    print(key, dictionary[key])
 
 

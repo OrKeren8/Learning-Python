@@ -1,3 +1,4 @@
+import time
 len_of_numbers = int(input('how many numbers do you want to sort'))
 list = []
 print('enter the numbers with enter after every number')

@@ -14,7 +14,6 @@ for i in range(q):
     fname = fname.lower()
     if '.' in fname:
         fname = fname.split('.')
-    if type(fname) == list:
         if fname[len(fname)-1] in ext_and_mt:
             print(ext_and_mt[fname[len(fname)-1]])
         else:

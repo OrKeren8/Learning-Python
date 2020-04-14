@@ -17,9 +17,9 @@ def quick_sort(list, start_location, stop_location):
             Guard += 1
     list[stop_location], list[Guard] = list[Guard], list[stop_location]
     # printing the process of sorting
-    for index_2 in range(len_of_numbers):
-        print('*' * numbers[index_2])
-    print('\n' * 10)
+    #for index_2 in range(len_of_numbers):
+    #   print('*' * numbers[index_2])
+    #print('\n' * 10)
 
     return Guard
 

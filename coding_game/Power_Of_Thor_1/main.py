@@ -11,27 +11,30 @@ import math
 # initial_tx: Thor's starting X position
 # initial_ty: Thor's starting Y position
 light_x, light_y, initial_tx, initial_ty = [int(i) for i in input().split()]
-
 # game loop
+moves = ""
 while True:
     remaining_turns = int(input())  # The remaining amount of turns Thor can move. Do not remove this line.
-    if initial_tx > light_x:
-        if initial_ty > light_y and (1 < initial_tx) and (1 < initial_ty):
-            print('NW')
-        if (initial_ty < light_y) and (1 < initial_tx) and (initial_ty < 17):
-            print('SW')
-        elif 1 < initial_tx:
-            print('W')
-    elif initial_tx < light_x:
-        if initial_ty > light_y and (initial_tx < 39) and (1 < initial_ty):
-            print('NE')
-        if initial_ty < light_y and (initial_tx < 39) and (initial_ty < 17):
-            print('SE')
-        elif initial_tx < 39:
-            print('E')
-    else:
-        if initial_ty > light_y and (1 < initial_ty):
-            print('N')
-        elif 1 < initial_ty:
+    while (light_x != initial_tx) | (light_y != initial_ty):
+        if light_y != initial_ty:
+            if light_y > initial_ty:
+                moves += "S"
+                initial_ty += 1
+            else:
+                moves += "N"
+                initial_ty -= 1
+        if light_x != initial_tx:
+            if light_x > initial_tx:
+                moves += "E"
+                initial_tx += 1
+            else:
+                moves += "W"
+                initial_tx -= 1
+        print(moves)
+        moves = ""
 
-            print('S')
+
+
+
+
+

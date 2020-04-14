@@ -1,4 +1,6 @@
 from euler_projects.euler_project_task_54.package.detecting import RankDetector
+import random
+import time
 
 
 def main():
