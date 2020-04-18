@@ -13,7 +13,6 @@ def deg_to_rad(deg):
     rad = deg/57.2957795
     return rad
 
-
 def move_mouse(angle):
     x_to_move = math.cos(angle) * 10
     y_to_move = math.sin(angle) * 10

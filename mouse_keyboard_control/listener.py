@@ -25,5 +25,5 @@ elif user_input == '2':
         l.join()
 
 elif user_input == '3':
-    with mlis(on_press=click_location) as s:
+    with mlis(on_click=click_location) as s:
         s.join()

@@ -17,6 +17,14 @@ class Pictures:
         return cropped_image
 
 
+time.sleep(3)
 a = Pictures()
-a.specific_pic((100, 100, 200, 200)).show()
+one = 85
+three = 95
+d = []
+for i in range(5):
+    d.append(a.specific_pic((750 + one*i, 487, 811 + three*i, 576)))
+time.sleep(3)
+for i in d:
+    i.show()
 
