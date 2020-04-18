@@ -5,15 +5,18 @@ class RankDetector(object):
         self.hand_suits = list(hand_suits)  # list of the suits in the current hand
         self.ranks = {'high_card': 1, 'one_pair': 2, 'two_pairs': 3, 'three_of_a_kind': 4, 'straight': 5, 'flush': 6, 'full_house': 7, 'four_of_a_kind': 8, 'Straight_Flush': 9, 'royal_flush': 10}
         self.stat = {'2.first_duplicate': 0, '3.value1': 0, '4.second_duplicate': 0, '5.value2': 0, '1.rank': 0, '6.highCard': 0}
-    # a function that takes a hand of cards and checks if there is
-    # straight/flush/straight flush/ straight royal.
-    # the function returns the best case it found as it name 1.rank
-    # and the high card of the hand
+    """
+    a function that takes a hand of cards and checks if there is
+    straight/flush/straight flush/ straight royal.
+    the function returns the best case it found as it name 1.rank
+    and the high card of the hand
+    """
 
     def flush_straight_comb(self):
         straight_check = 0
         flush_check = 0
         sum_of_nums = 0
+
         high_card = self.hand_nums[4]  # the last card in the sorted hand has the highest value
         for i in range(4):  # go through the hand
             sum_of_nums += self.hand_nums[i]
@@ -32,10 +35,12 @@ class RankDetector(object):
         elif (straight_check == 3) and (self.hand_nums[3] == 5) and (self.hand_nums[4] == 14):  # in a case of 1,2,3,4,5
             self.stat['1.rank'], self.stat['6.highCard'] = self.ranks['straight'], 5
         return dict(self.stat)
-    
-    # a function that gets a hand of cards and checks if there is
-    # pair/ two pairs/ 3 of a kind/ full house/ 4 of a kind
-    # the function returns the best case it found
+
+    """
+    a function that gets a hand of cards and checks if there is
+    pair/ two pairs/ 3 of a kind/ full house/ 4 of a kind
+    the function returns the best case it found
+    """
     def x_of_a_kind(self):
         self.stat['1.rank'], self.stat['6.highCard'] = 0, 0  # reset the stat of the hand
         high_card = self.hand_nums[4]  # the last card in the sorted hand has the highest value

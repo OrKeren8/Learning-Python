@@ -11,19 +11,19 @@ def write_to_file(data):
 def print_location(x, y):
     print('the location of the mouse is (' + str(x) + ', ' + str(y) + ')')
 
+def click_location(*args):
+    print(args)
 
-if input() == '1':
+
+user_input = input()
+if user_input == '1':
     with mlis(on_move=print_location) as m:
         m.join()
 
-else:
+elif user_input == '2':
     with klis(on_press=write_to_file) as l:
         l.join()
 
-# m = mlis(on_move=print_location)
-# l = klis(on_press=write_to_file)
-#
-# l.start()
-# l.stop()
-# m.start()
-# m.stop()
+elif user_input == '3':
+    with mlis(on_press=click_location) as s:
+        s.join()
