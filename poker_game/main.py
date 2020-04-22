@@ -1,7 +1,5 @@
-from mouse_keyboard_control.poker_game.modules.mouse import Mouse
-from mouse_keyboard_control.poker_game.modules.pictures import Pictures
-from PIL import Image, ImageChops
-import time
+from poker_game.modules.mouse import Mouse
+from poker_game.modules.pictures import Pictures
 
 dic_of_buttons = {
     'select table': (1123, 711),
