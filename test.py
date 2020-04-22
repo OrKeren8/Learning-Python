@@ -1,15 +1,8 @@
-import time
-
-class Test:
-    @staticmethod
-    def print():
-        print("momo")
-        time.sleep(1)
-        print('koko')
-
-class Test2(Test):
-    pass
+def momo():
+    m = True
+    if m:
+        return True
+    return False
 
 
-a = Test2()
-a.print()
+print(momo())

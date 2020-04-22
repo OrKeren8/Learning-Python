@@ -14,6 +14,14 @@ def print_location(x, y):
 def click_location(*args):
     print(args)
 
+def check_start_button(data):
+    data = str(data)
+    if data == "'s'":
+        print('stop')
+        b.stop()
+        with mlis(on_click=click_location) as a:
+            a.join()
+
 
 user_input = input()
 if user_input == '1':
@@ -21,9 +29,9 @@ if user_input == '1':
         m.join()
 
 elif user_input == '2':
-    with klis(on_press=write_to_file) as l:
-        l.join()
+    with klis(on_press=write_to_file) as k:
+        k.join()
 
 elif user_input == '3':
-    with mlis(on_click=click_location) as s:
-        s.join()
+    with klis(on_press=check_start_button) as b:
+        b.join()
