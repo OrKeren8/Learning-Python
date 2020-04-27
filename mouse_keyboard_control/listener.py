@@ -23,7 +23,7 @@ def check_start_button(data):
             a.join()
 
 
-user_input = input()
+user_input = input('type 1 to print the location of the mouse when moved\ntype 2 to collect the keys pressed from the keyboard\ntype 3 to print the location of the mouse when clicked, to start press s\n')
 if user_input == '1':
     with mlis(on_move=print_location) as m:
         m.join()

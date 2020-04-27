@@ -6,10 +6,19 @@ import datetime
 
 
 class Pictures:
-    desk_cards = {
+    desk_cards_nums = {
         'x base card coor': 753,
         'y base card coor': 491,
         'card length': 23,
+        'card width': 26,
+        'between cards': 86,
+        'thresh hold': 220
+    }
+
+    desk_cards_shapes = {
+        'x base card coor': 745,
+        'y base card coor': 518,
+        'card length': 15,
         'card width': 26,
         'between cards': 86,
         'thresh hold': 220
@@ -27,23 +36,24 @@ class Pictures:
         return cropped_image
 
 
-    def desk_cards_pics(self):
+    def desk_cards_nums_pics(self):
         """
         method that takes 5 images of the card's number on the poker desk
         :return: a list if the 5 images
         """
         pic_list = []
         for i in range(5):
-            whole_card = self.specific_pic((self.desk_cards['x base card coor'] + self.desk_cards['between cards'] * i + i,
-                                            self.desk_cards['y base card coor'],
-                                            self.desk_cards['x base card coor'] + self.desk_cards['card width'] + self.desk_cards['between cards'] * i + i,
-                                            self.desk_cards['y base card coor'] + self.desk_cards['card length']))
-            # whole_card = whole_card.convert('1')
-            # up_half_card = whole_card.crop((0, 0, 23, 23))
-            # down_half_card = whole_card.crop((0, 26, 28, 49))
-            # self.pic_list.append(up_half_card)
-            # self.pic_list.append(down_half_card)
-            pic_list.append(whole_card)
+            card_num = self.specific_pic((self.desk_cards_nums['x base card coor'] + self.desk_cards_nums['between cards'] * i + i,
+                                            self.desk_cards_nums['y base card coor'],
+                                            self.desk_cards_nums['x base card coor'] + self.desk_cards_nums['card width'] + self.desk_cards_nums['between cards'] * i + i,
+                                            self.desk_cards_nums['y base card coor'] + self.desk_cards_nums['card length']))
+
+            card_shape = self.specific_pic((self.desk_cards_shapes['x base card coor'] + self.desk_cards_shapes['between cards'] * i + i*3,
+                                            self.desk_cards_shapes['y base card coor'],
+                                            self.desk_cards_shapes['x base card coor'] + self.desk_cards_shapes['card width'] + self.desk_cards_shapes['between cards'] * i + i*3,
+                                            self.desk_cards_shapes['y base card coor'] + self.desk_cards_shapes['card length']))
+
+            pic_list.append((card_num, card_shape))
         return pic_list
 
 
@@ -58,7 +68,7 @@ class Pictures:
         pic_num = start_num
         for iteration in range(iterations):
             time.sleep(delay)
-            pic_list = self.desk_cards_pics()
+            pic_list = self.desk_cards_nums_pics()
             for pic in pic_list:
                 card_num = self.check_if_card(pic)
                 if card_num != 101:
@@ -69,9 +79,9 @@ class Pictures:
     def check_if_card(self, compare_image):
         reference_images  = []
         for num in range(1, 14):
-            image = Image.open('poker_game/images/a desk nums {}.jpg'.format(num))
+            image = Image.open('images/a desk nums {}.jpg'.format(num))
             reference_images.append(image)
-        card_num = self.check_similarity(compare_image, reference_images, self.desk_cards['thresh hold'])
+        card_num = self.check_similarity(compare_image, reference_images, self.desk_cards_nums['thresh hold'])
         return card_num
 
 
@@ -113,7 +123,7 @@ class Pictures:
         :param pre_name: the image name
         :return: None
         """
-        image.save('images/{}{}.jpg'.format(str(pre_name), str(pic_num)))
+        image.save('images/{} {}.jpg'.format(str(pre_name), str(pic_num)))
 
 '''
     def check_if_card_num(self, compare_image):
@@ -124,7 +134,7 @@ class Pictures:
         """
         for num in range(1, 14):
             reference_image = Image.open('images/desk nums {}.jpg'.format(num))
-            equal = self.check_similarity(reference_image, compare_image, self.desk_cards['thresh hold'])
+            equal = self.check_similarity(reference_image, compare_image, self.desk_cards_nums['thresh hold'])
             if equal is True:
                 return True
         return False
