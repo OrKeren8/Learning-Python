@@ -22,13 +22,13 @@ def start_game():
     m.click_mouse(dic_of_buttons['play now'])
 
 
-def save_5_cards_from_desk():
-    num = 93
-    for i in range(2000):
-        time.sleep(20)
-        pic_list = pic.desk_cards_nums_pics()
+def save_5_cards_from_desk(iterations, delay, start_num):
+    num = start_num
+    for i in range(iterations):
+        time.sleep(delay)
+        pic_list = pic.desk_cards_pics()
         for item in pic_list:
-            pic.save_photo(item, num, 'desk nums ')
+            pic.save_photo(item[1], pic.desk_cards_shapes['path'], 'desk shapes', num)
             num +=1
 
 
@@ -36,7 +36,7 @@ def save_only_middle_card_num():
     num = 0
     for i in range(300):
         time.sleep(15)
-        pic_list = pic.desk_cards_nums_pics()
+        pic_list = pic.desk_cards_pics()[0]
         pic.save_photo(pic_list[2], num, 'desk nums ')
         num +=1
 
@@ -75,16 +75,16 @@ def check_if_card():
     comp_images = []
     num_of_images = 0
     for num1 in range(1, 14):
-        image1 = Image.open('images/a desk nums {}.jpg'.format(num1))
+        image1 = Image.open('images/all numbers/a desk nums {}.jpg'.format(num1))
         comp_images.append(image1)
-    for num2 in range(1000):
+    for num2 in range(2000):
         try:
-            image = Image.open('images/desk nums {}.jpg'.format(num2))
-            card_num = pic.check_similarity(image, comp_images, 220)
+            image = Image.open('images/all numbers/desk nums {}.jpg'.format(num2))
+            card_num = pic.check_similarity(image, comp_images, 220, black_and_white=True)
             num_of_images += 1
             if card_num != 101:
                 cards_list.append(card_num + 1)
-                image.save('images/{}/{}{}.jpg'.format(str(card_num + 1), 'card ', str(num2)))
+                image.save('images/sorted nums/{}/{}{}.jpg'.format(str(card_num + 1), 'card ', str(num2)))
         except FileNotFoundError:
             pass
     print(len(cards_list))
@@ -93,10 +93,40 @@ def check_if_card():
 def print_desk_cards(iterations, delay):
     time.sleep(delay)
     for _ in range(iterations):
-        cards = pic.desk_cards_nums_pics()
+        cards = pic.desk_cards_pics()[0]
         for i in range(5):
             cards[i][0].show()
             cards[i][1].show()
-# pic.collect_numbers(200, 836, 2)
-print_desk_cards(1, 2)
+
+
+def check_if_card_shape():
+    cards_list = []
+    comp_images = []
+    num_of_images = 0
+    for num1 in range(1, 5):
+        image1 = Image.open('images/all shapes/a desk shapes {}.jpg'.format(num1))
+        comp_images.append(image1)
+    for num2 in range(2000):
+        try:
+            image = Image.open('images/all shapes/desk shapes {}.jpg'.format(num2))
+            if num2 == 190:
+                card_num = pic.check_similarity(image, comp_images, pic.desk_cards_shapes['thresh hold'], debug=True)
+            else:
+                card_num = pic.check_similarity(image, comp_images, pic.desk_cards_shapes['thresh hold'])
+            num_of_images += 1
+            if card_num != 101:
+                cards_list.append(card_num + 1)
+                image.save('images/sorted shapes/{}/{}{}.jpg'.format(str(card_num + 1), 'card ', str(num2)))
+        except FileNotFoundError:
+            pass
+    print(len(cards_list))
+    print(num_of_images)
+
+
+# pic.collect_desk_cards(200, 836, 2)
+# print_desk_cards(1, 2)
 # check_if_card()
+# save_5_cards_from_desk(200, 15, 121)
+check_if_card_shape()
+check_if_card()
+# pic.collect_desk_cards(100, 1088, 0, debug=True)
