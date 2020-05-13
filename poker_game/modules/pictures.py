@@ -94,7 +94,7 @@ class Pictures:
         takes the path and the name of the referense images and append them to one list of comparable images
         :param ref_images_path: the path which the images are in
         :param ref_images_name: the 'first name' of this type of images
-        :return: return the referense list of images
+        :return: return the referense list of images.
         """
         reference_images = []
         for i in range(1, 27):
