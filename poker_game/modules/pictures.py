@@ -71,6 +71,7 @@ class Pictures:
         :return: None
         """
         card = [101, 101]
+        nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
         shapes = ['heart', 'diamond', 'spades', 'clubs']
         pic_num = start_num
         for iteration in range(iterations):
@@ -81,7 +82,7 @@ class Pictures:
                 card[1] = self.check_similarity(pic[1], self.ref_image_list(self.desk_cards_shapes['path'], self.desk_cards_shapes['name']),self.desk_cards_shapes['thresh hold'])
                 if card[0] != 101 and card[1] != 101:
                     if debug:
-                        print('{} of {}'.format(card[0] + 1, shapes[card[1]]))
+                        print('{} of {}'.format(nums[card[0]], shapes[card[1]]))
                     self.save_photo(pic[0], self.desk_cards_nums['path'], 'desk nums', pic_num)
                     self.save_photo(pic[1], self.desk_cards_shapes['path'], 'desk shapes', pic_num)
                     pic_num += 1
@@ -89,6 +90,12 @@ class Pictures:
 
     @staticmethod
     def ref_image_list(ref_images_path, ref_images_name):
+        """
+        takes the path and the name of the referense images and append them to one list of comparable images
+        :param ref_images_path: the path which the images are in
+        :param ref_images_name: the 'first name' of this type of images
+        :return: return the referense list of images
+        """
         reference_images = []
         for i in range(1, 27):
             try:

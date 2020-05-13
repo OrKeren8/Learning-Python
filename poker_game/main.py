@@ -123,10 +123,4 @@ def check_if_card_shape():
     print(num_of_images)
 
 
-# pic.collect_desk_cards(200, 836, 2)
-# print_desk_cards(1, 2)
-# check_if_card()
-# save_5_cards_from_desk(200, 15, 121)
-check_if_card_shape()
-check_if_card()
-# pic.collect_desk_cards(100, 1088, 0, debug=True)
+pic.collect_desk_cards(50, 1087, 10, True)
