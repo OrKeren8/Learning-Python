@@ -15,7 +15,7 @@ class Pictures:
         'card length': 23,
         'card width': 26,
         'between cards': 86,
-        'thresh hold': 220
+        'thresh hold':  220
     }
     desk_cards_shapes = {
         'path': 'images/all shapes/',
