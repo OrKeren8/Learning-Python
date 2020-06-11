@@ -41,35 +41,6 @@ def save_only_middle_card_num():
         num +=1
 
 
-# def check_if_card_num():
-#     not_succsess = 0
-#     image1 = None
-#     image2 = None
-#     pre_name = 'num'
-#     momo = []
-#     koko = [130, 110, 80, 110, 100, 100, 140, 120, 140, 210, 140, 230, 180]
-#     for num2 in range(900):
-#         eq = False
-#         for num1 in range(1, 14):
-#             try:
-#                 image1 = Image.open('images/a desk nums {}.jpg'.format(num1))
-#                 image2 = Image.open('images/desk nums {}.jpg'.format(num2))
-#                 equal =  pic.check_similarity(image1, image2, koko[num1 - 1])
-#                 if equal:
-#                     eq = True
-#                     # print('{} and {} are the same'.format(num1, num2))
-#                     # momo.append((num1, num2))
-#                     image2.save('images/{}/{}{}.jpg'.format(str(num1),str(pre_name), str(num2)))
-#             except FileNotFoundError:
-#                 eq = True
-#         if not eq:
-#             if image2:
-#                 image2.show()
-#                 not_succsess += 1
-#     # print(len(momo))
-#     print(not_succsess)
-
-
 def check_if_card():
     cards_list = []
     comp_images = []
@@ -123,4 +94,27 @@ def check_if_card_shape():
     print(num_of_images)
 
 
-pic.collect_desk_cards(50, 1087, 10, True)
+def print_new_desk_cards():
+    desk_cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
+    full = False
+    for i in range(100000):
+        current_desk_cards = pic.check_deck_cards()
+        if full:
+            flag = 0
+            for index3 in range(5):
+                if current_desk_cards[index3] == [None, None]:
+                    flag += 1
+            if flag == 5:
+                full = False
+        else:
+            for index in range(5):
+                if desk_cards[index] != current_desk_cards[index]:
+                    if current_desk_cards[0] != [None, None] and current_desk_cards[1] != [None, None] and current_desk_cards[2] != [None, None]:
+                        desk_cards = current_desk_cards
+                        if desk_cards[4] != [None, None]:
+                            full = True
+                        print(desk_cards)
+                        break
+
+
+print_new_desk_cards()

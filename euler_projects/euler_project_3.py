@@ -2,7 +2,7 @@
 
 prims = []
 biggest_prime_factor = 0
-the_number = 13195
+the_number = 11720
 i = 0
 for number in range(2, int(10000)):
     for m in range(1, number):

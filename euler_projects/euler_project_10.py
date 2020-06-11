@@ -8,7 +8,7 @@ list_of_primes = []
 
 s_p = int(input('insert the serial of the prime number you want to find'))
 
-while c_n < s_p:
+while len(list_of_primes) < s_p:
     c_n += 1
     for div in range(2, math.floor(math.sqrt(c_n)) + 1):
         if c_n % div == 0:

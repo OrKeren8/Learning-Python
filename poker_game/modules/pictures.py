@@ -6,6 +6,7 @@ import datetime
 
 
 class Pictures:
+
     desk_cards_nums = {
         'path': 'images/all numbers/',
         'name': 'a desk nums',
@@ -16,7 +17,6 @@ class Pictures:
         'between cards': 86,
         'thresh hold': 220
     }
-
     desk_cards_shapes = {
         'path': 'images/all shapes/',
         'name': 'a desk shapes',
@@ -25,6 +25,26 @@ class Pictures:
         'card length': 15,
         'card width': 26,
         'between cards': 86,
+        'thresh hold': 70
+    }
+    first_hand_cards_nums = {
+        'path': 'images/first hand nums/',
+        'name': 'a hand nums',
+        'x base card coor': 848,
+        'y base card coor': 786,
+        'card length': 39,
+        'card width': 55,
+        'between cards': 0,
+        'thresh hold': 220
+    }
+    first_hand_cards_shapes = {
+        'path': 'images/first hand shapes/',
+        'name': 'a hand shapes',
+        'x base card coor': 862,
+        'y base card coor': 834,
+        'card length': 42,
+        'card width': 27,
+        'between cards': 0,
         'thresh hold': 70
     }
 
@@ -40,13 +60,14 @@ class Pictures:
         return cropped_image
 
 
-    def desk_cards_pics(self):
+    def desk_cards_pics(self, pics):
         """
+        :param pics: how many pics there are to take
         method that takes 5 images of the card's number and 5 shots of the card's shape on the poker desk
         :return: a list of 5 tuples first item for the card num and the second for it's shape
         """
         pic_list = []
-        for i in range(5):
+        for i in range(pics):
             card_num = self.specific_pic((self.desk_cards_nums['x base card coor'] + self.desk_cards_nums['between cards'] * i + i,
                                             self.desk_cards_nums['y base card coor'],
                                             self.desk_cards_nums['x base card coor'] + self.desk_cards_nums['card width'] + self.desk_cards_nums['between cards'] * i + i,
@@ -76,7 +97,7 @@ class Pictures:
         pic_num = start_num
         for iteration in range(iterations):
             time.sleep(delay)
-            pic_list = self.desk_cards_pics()
+            pic_list = self.desk_cards_pics(5)
             for pic in pic_list:
                 card[0] = self.check_similarity(pic[0], self.ref_image_list(self.desk_cards_nums['path'], self.desk_cards_nums['name']), self.desk_cards_nums['thresh hold'], black_and_white=True)
                 card[1] = self.check_similarity(pic[1], self.ref_image_list(self.desk_cards_shapes['path'], self.desk_cards_shapes['name']),self.desk_cards_shapes['thresh hold'])
@@ -86,6 +107,29 @@ class Pictures:
                     self.save_photo(pic[0], self.desk_cards_nums['path'], 'desk nums', pic_num)
                     self.save_photo(pic[1], self.desk_cards_shapes['path'], 'desk shapes', pic_num)
                     pic_num += 1
+
+
+    def check_deck_cards(self, debug=False):
+        """
+        takes a screenshot of the card's numbers and shapes on the desk and and return their value
+        :param debug: True to print the values
+        :return: the cards and their shapes
+        """
+        card = [101, 101]
+        nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        shapes = ['heart', 'diamond', 'spades', 'clubs']
+        pic_list = self.desk_cards_pics(5)
+        value = []
+        for pic in pic_list:
+            card[0] = self.check_similarity(pic[0], self.ref_image_list(self.desk_cards_nums['path'], self.desk_cards_nums['name']), self.desk_cards_nums['thresh hold'], black_and_white=True)
+            card[1] = self.check_similarity(pic[1], self.ref_image_list(self.desk_cards_shapes['path'], self.desk_cards_shapes['name']),self.desk_cards_shapes['thresh hold'])
+            if card[0] != 101 and card[1] != 101:
+                if debug:
+                    print('{} of {}'.format(nums[card[0]], shapes[card[1]]))
+                value.append([nums[card[0]], shapes[card[1]]])
+            else:
+                value.append([None, None])
+        return value
 
 
     @staticmethod
@@ -105,22 +149,6 @@ class Pictures:
                 break
         return reference_images
 
-    # def check_if_desk_card_shape(self, compare_image, ref_images_path):
-    #     reference_images = []
-    #     for num in range(1, 5):
-    #         image = Image.open('{} {}.jpg'.format(ref_images_path, num))
-    #         reference_images.append(image)
-    #     card_shape = self.check_similarity(compare_image, reference_images, self.desk_cards_shapes['thresh hold'])
-    #     return card_shape
-    #
-    #
-    # def check_if_desk_card_num(self, compare_image, ref_images_path):
-    #     reference_images  = []
-    #     for num in range(1, 14):
-    #         image = Image.open('images/a desk nums {}.jpg'.format(num))
-    #         reference_images.append(image)
-    #     card_num = self.check_similarity(compare_image, reference_images, self.desk_cards_nums['thresh hold'])
-    #     return card_num
 
     @staticmethod
     def check_similarity(image1, comp_images, threshold, black_and_white=False, debug=False):
@@ -168,40 +196,3 @@ class Pictures:
         :return: None
         """
         image.save('{}{} {}.jpg'.format(path, str(pre_name), str(pic_num)))
-
-'''
-    def check_if_card_num(self, compare_image):
-        """
-        compere every card number that can be on the desk to the given image and check if one of them are equal
-        :param compare_image: the new image that have taken
-        :return: if the new image is a number from the desk
-        """
-        for num in range(1, 14):
-            reference_image = Image.open('images/desk nums {}.jpg'.format(num))
-            equal = self.check_similarity(reference_image, compare_image, self.desk_cards_nums['thresh hold'])
-            if equal is True:
-                return True
-        return False
-'''
-'''
-    @staticmethod
-    def check_similarity(image1, image2, threshold):
-        """
-        check if the two given images are the same, it consider a minimal change of threshold
-        :param image1: first image
-        :param image2: second image
-        :param threshold: the maximum amount of different pixels to consider the two images as equal
-        :return: True for similarity and False for not
-        """
-        image1 = image1.convert('1')
-        image2 = image2.convert('1')
-        diff = ImageChops.difference(image1, image2)
-        pix_val = list(diff.getdata())
-        diff_pixels = 0
-        for pixel in pix_val:
-            if pixel != 0:
-                diff_pixels += 1
-        if diff_pixels < threshold:
-            return True
-        return False
-'''

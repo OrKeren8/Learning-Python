@@ -1,19 +1,11 @@
-class Bill:
-    bill_list = []
+import vaunix_api.lsg as lsg
 
-    def init(self):
-        pass
+api = lsg.VNX_LSG_API.default()
 
-    def additem(self,what,kg,price):
-        self.bill_list.append((what,kg,price))
+# necessary to refresh device list
+api.get_num_devices()
 
-    def printbill(self):
-        print("The Bill is : \n")
-        for item in self.bill_list:
-            print(f"#{self.bill_list.index(item) + 1}")
-
-
-man1=Bill()
-man1.additem("banana",1.5,100)
-man1.additem("orange",2,300)
-man1.printbill()
+for device_id in api.get_dev_info():
+    print(api.get_serial_number(device_id),
+          api.get_model_name(device_id),
+          lsg.LSGStatus(api.get_device_status(device_id)))
