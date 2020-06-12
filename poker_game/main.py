@@ -26,9 +26,9 @@ def save_5_cards_from_desk(iterations, delay, start_num):
     num = start_num
     for i in range(iterations):
         time.sleep(delay)
-        pic_list = pic.desk_cards_pics()
+        pic_list = pic.cards_pics()
         for item in pic_list:
-            pic.save_photo(item[1], pic.desk_cards_shapes['path'], 'desk shapes', num)
+            pic.save_photo(item[1], pic.cards['path'], 'desk shapes', num)
             num +=1
 
 
@@ -36,7 +36,7 @@ def save_only_middle_card_num():
     num = 0
     for i in range(300):
         time.sleep(15)
-        pic_list = pic.desk_cards_pics()[0]
+        pic_list = pic.cards_pics()[0]
         pic.save_photo(pic_list[2], num, 'desk nums ')
         num +=1
 
@@ -61,10 +61,10 @@ def check_if_card():
     print(len(cards_list))
     print(num_of_images)
 
-def print_desk_cards(iterations, delay):
+def print_cards(iterations, delay):
     time.sleep(delay)
     for _ in range(iterations):
-        cards = pic.desk_cards_pics()[0]
+        cards = pic.cards_pics()[0]
         for i in range(5):
             cards[i][0].show()
             cards[i][1].show()
@@ -81,9 +81,9 @@ def check_if_card_shape():
         try:
             image = Image.open('images/all shapes/desk shapes {}.jpg'.format(num2))
             if num2 == 190:
-                card_num = pic.check_similarity(image, comp_images, pic.desk_cards_shapes['thresh hold'], debug=True)
+                card_num = pic.check_similarity(image, comp_images, pic.cards['thresh hold'], debug=True)
             else:
-                card_num = pic.check_similarity(image, comp_images, pic.desk_cards_shapes['thresh hold'])
+                card_num = pic.check_similarity(image, comp_images, pic.cards['thresh hold'])
             num_of_images += 1
             if card_num != 101:
                 cards_list.append(card_num + 1)
@@ -94,27 +94,29 @@ def check_if_card_shape():
     print(num_of_images)
 
 
-def print_new_desk_cards():
-    desk_cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
+def print_new_cards():
+    cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
     full = False
     for i in range(100000):
-        current_desk_cards = pic.check_deck_cards()
+        current_cards = pic.check_deck_cards("desk", 5)
         if full:
             flag = 0
             for index3 in range(5):
-                if current_desk_cards[index3] == [None, None]:
+                if current_cards[index3] == [None, None]:
                     flag += 1
             if flag == 5:
                 full = False
         else:
             for index in range(5):
-                if desk_cards[index] != current_desk_cards[index]:
-                    if current_desk_cards[0] != [None, None] and current_desk_cards[1] != [None, None] and current_desk_cards[2] != [None, None]:
-                        desk_cards = current_desk_cards
-                        if desk_cards[4] != [None, None]:
+                if cards[index] != current_cards[index]:
+                    if current_cards[0] != [None, None] and current_cards[1] != [None, None] and current_cards[2] != [None, None]:
+                        cards = current_cards
+                        if cards[4] != [None, None]:
                             full = True
-                        print(desk_cards)
+                        print(cards)
                         break
 
 
-print_new_desk_cards()
+momo = pic.card_pics("1 hand", 1)
+momo[0][0].show()
+momo[0][1].show()
