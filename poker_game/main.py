@@ -4,6 +4,7 @@ from PIL import Image
 import random
 import time
 
+
 dic_of_buttons = {
     'select table': (1123, 711),
     '5k payment': (608, 500),
@@ -21,94 +22,48 @@ def start_game():
     # m.click_mouse(dic_of_buttons['game play time - normal'])
     m.click_mouse(dic_of_buttons['play now'])
 
-
-def save_5_cards_from_desk(iterations, delay, start_num):
-    num = start_num
-    for i in range(iterations):
-        time.sleep(delay)
-        pic_list = pic.cards_pics()
-        for item in pic_list:
-            pic.save_photo(item[1], pic.cards['path'], 'desk shapes', num)
-            num +=1
-
-
-def save_only_middle_card_num():
-    num = 0
-    for i in range(300):
-        time.sleep(15)
-        pic_list = pic.cards_pics()[0]
-        pic.save_photo(pic_list[2], num, 'desk nums ')
-        num +=1
-
-
-def check_if_card():
-    cards_list = []
-    comp_images = []
-    num_of_images = 0
-    for num1 in range(1, 14):
-        image1 = Image.open('images/all numbers/a desk nums {}.jpg'.format(num1))
-        comp_images.append(image1)
-    for num2 in range(2000):
-        try:
-            image = Image.open('images/all numbers/desk nums {}.jpg'.format(num2))
-            card_num = pic.check_similarity(image, comp_images, 220, black_and_white=True)
-            num_of_images += 1
-            if card_num != 101:
-                cards_list.append(card_num + 1)
-                image.save('images/sorted nums/{}/{}{}.jpg'.format(str(card_num + 1), 'card ', str(num2)))
-        except FileNotFoundError:
-            pass
-    print(len(cards_list))
-    print(num_of_images)
-
-def print_cards(iterations, delay):
-    time.sleep(delay)
-    for _ in range(iterations):
-        cards = pic.cards_pics()[0]
-        for i in range(5):
-            cards[i][0].show()
-            cards[i][1].show()
-
-
-def check_if_card_shape():
-    cards_list = []
-    comp_images = []
-    num_of_images = 0
-    for num1 in range(1, 5):
-        image1 = Image.open('images/all shapes/a desk shapes {}.jpg'.format(num1))
-        comp_images.append(image1)
-    for num2 in range(2000):
-        try:
-            image = Image.open('images/all shapes/desk shapes {}.jpg'.format(num2))
-            if num2 == 190:
-                card_num = pic.check_similarity(image, comp_images, pic.cards['thresh hold'], debug=True)
-            else:
-                card_num = pic.check_similarity(image, comp_images, pic.cards['thresh hold'])
-            num_of_images += 1
-            if card_num != 101:
-                cards_list.append(card_num + 1)
-                image.save('images/sorted shapes/{}/{}{}.jpg'.format(str(card_num + 1), 'card ', str(num2)))
-        except FileNotFoundError:
-            pass
-    print(len(cards_list))
-    print(num_of_images)
-
-
-def print_new_cards():
+def print_new_cards(hand_card_index, desk_card_index):
+    '''
+    function which print the value of the cards on the desk only if ocured a change in the cards
+    :return: ---
+    '''
+    # print("momo 1")##############################################################################################
     cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
+    first_hand_card = [[None, None]]
     full = False
-    for i in range(100000):
+    collect_desk = True
+    while True:
+        # print("momo 2")  ##########################################################################################
         current_cards = pic.check_deck_cards("desk", 5)
+        current_first_hand_card = pic.check_deck_cards("1 hand", 1)
+        if current_first_hand_card != [[None, None]] and current_first_hand_card != first_hand_card:
+            first_hand_card = current_first_hand_card
+            print('save hand cards')
+            pic.collect_cards('1 hand', 1, 1, hand_card_index)
+            pic.collect_cards('2 hand', 1, 1, hand_card_index)
+            hand_card_index += 1
+            print(pic.check_deck_cards("1 hand", 1))
+            print(pic.check_deck_cards("2 hand", 1))
+            m.click_mouse((1177, 885))
         if full:
+            if collect_desk:
+                print('save desk cards')
+                pic.collect_cards('desk', 5, 1, desk_card_index)
+                collect_desk = False
+                desk_card_index += 5
             flag = 0
             for index3 in range(5):
                 if current_cards[index3] == [None, None]:
                     flag += 1
             if flag == 5:
+                collect_desk = True
                 full = False
         else:
+            # print("momo 3")  ##########################################################################################
             for index in range(5):
+                # print(current_cards[index])###################################################################
                 if cards[index] != current_cards[index]:
+                    # print("momo 4")  ##########################################################
                     if current_cards[0] != [None, None] and current_cards[1] != [None, None] and current_cards[2] != [None, None]:
                         cards = current_cards
                         if cards[4] != [None, None]:
@@ -117,6 +72,9 @@ def print_new_cards():
                         break
 
 
-momo = pic.card_pics("1 hand", 1)
-momo[0][0].show()
-momo[0][1].show()
+print_new_cards(int(input("last hand number")), int(input("last desk number")))
+
+
+# for i in range(2000):
+#     momo = Image.open('images/all numbers/desk desk nums {}'.format(i))
+#     momo.save('images/desk nums/desk {}'.format(i))

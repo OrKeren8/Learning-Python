@@ -7,16 +7,16 @@ import datetime
 
 class Pictures:
     cards = {
-        'desk num path': 'images/all numbers/',
-        'desk num name': 'a desk nums',
+        'desk num path': 'images/desk nums/',
+        'desk num name': 'desk num',
         'desk num x base card coor': 753,
         'desk num y base card coor': 491,
         'desk num card length': 23,
         'desk num card width': 26,
         'desk num between cards': 86,
         'desk num thresh hold': 220,
-        'desk shape path': 'images/all shapes/',
-        'desk shape name': 'a desk shapes',
+        'desk shape path': 'images/desk shapes/',
+        'desk shape name': 'desk shape',
         'desk shape x base card coor': 747,
         'desk shape y base card coor': 518,
         'desk shape card length': 15,
@@ -24,22 +24,39 @@ class Pictures:
         'desk shape between cards': 86,
         'desk shape thresh hold': 70,
 
-        '1 hand num path': 'images/first hand nums/',
-        '1 hand num name': 'a hand nums',
-        '1 hand num x base card coor': 848,
+        '1 hand num path': 'images/1 hand nums/',
+        '1 hand num name': '1 hand num',
+        '1 hand num x base card coor': 857,
         '1 hand num y base card coor': 786,
-        '1 hand num card length': 39,
-        '1 hand num card width': 55,
+        '1 hand num card length': 44,
+        '1 hand num card width': 41,
         '1 hand num between cards': 0,
-        '1 hand num thresh hold': 220,
-        '1 hand shape path': 'images/first hand shapes/',
-        '1 hand shape name': 'a hand shapes',
-        '1 hand shape x base card coor': 862,
-        '1 hand shape y base card coor': 834,
-        '1 hand shape card length': 42,
-        '1 hand shape card width': 27,
+        '1 hand num thresh hold': 300,
+        '1 hand shape path': 'images/1 hand shapes/',
+        '1 hand shape name': '1 hand shape',
+        '1 hand shape x base card coor': 869,
+        '1 hand shape y base card coor': 829,
+        '1 hand shape card length': 39,
+        '1 hand shape card width': 38,
         '1 hand shape between cards': 0,
-        '1 hand shape thresh hold': 70
+        '1 hand shape thresh hold': 150,
+
+        '2 hand num path': 'images/2 hand nums/',
+        '2 hand num name': '2 hand num',
+        '2 hand num x base card coor': 964,
+        '2 hand num y base card coor': 772,
+        '2 hand num card length': 43,
+        '2 hand num card width': 44,
+        '2 hand num between cards': 0,
+        '2 hand num thresh hold': 300,
+        '2 hand shape path': 'images/2 hand shapes/',
+        '2 hand shape name': '2 hand shape',
+        '2 hand shape x base card coor': 956,
+        '2 hand shape y base card coor': 818,
+        '2 hand shape card length': 34,
+        '2 hand shape card width': 32,
+        '2 hand shape between cards': 0,
+        '2 hand shape thresh hold': 150
     }
 
 
@@ -90,7 +107,7 @@ class Pictures:
         """
         card = [101, 101]
         nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-        shapes = ['heart', 'diamond', 'spades', 'clubs']
+        shapes = ['clubs', 'diamond', 'spades', 'heart', 'heart']
         pic_num = start_num
         for iteration in range(iterations):
             time.sleep(delay)
@@ -101,8 +118,8 @@ class Pictures:
                 if card[0] != 101 and card[1] != 101:
                     if debug:
                         print('{} of {}'.format(nums[card[0]], shapes[card[1]]))
-                    self.save_photo(pic[0], self.cards['{} num path'.format(card_type)], '{} desk nums'.format(card_type), pic_num)
-                    self.save_photo(pic[1], self.cards['{} shape path'.format(card_type)], '{} desk shapes'.format(card_type), pic_num)
+                    self.save_photo(pic[0], self.cards['{} num path'.format(card_type)], self.cards['{} num name'.format(card_type)], pic_num)
+                    self.save_photo(pic[1], self.cards['{} shape path'.format(card_type)], self.cards['{} shape name'.format(card_type)], pic_num)
                     pic_num += 1
 
 
@@ -116,12 +133,16 @@ class Pictures:
         """
         card = [101, 101]
         nums = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-        shapes = ['heart', 'diamond', 'spades', 'clubs']
+        shapes = ['clubs', 'diamond', 'spades', 'heart', 'heart']
         pic_list = self.card_pics(card_type, num_of_cards)
         value = []
         for pic in pic_list:
             card[0] = self.check_similarity(pic[0], self.ref_image_list(self.cards['{} num path'.format(card_type)], self.cards['{} num name'.format(card_type)]), self.cards['{} num thresh hold'.format(card_type)], black_and_white=True)
+            # pic[0].show()############################################################################################
+            # print("from check_desk_card: the value od the number card: {}".format(card[0]))#####################################################
             card[1] = self.check_similarity(pic[1], self.ref_image_list(self.cards['{} shape path'.format(card_type)], self.cards['{} shape name'.format(card_type)]),self.cards['{} shape thresh hold'.format(card_type)])
+            # print("from check_desk_card: the value of the shape card: {}".format(card[1]))######################################################
+            # pic[1].show()#############################################################################################
             if card[0] != 101 and card[1] != 101:
                 if debug:
                     print('{} of {}'.format(nums[card[0]], shapes[card[1]]))
@@ -132,19 +153,25 @@ class Pictures:
 
 
     @staticmethod
-    def ref_image_list(ref_images_path, ref_images_name):
+    def ref_image_list(ref_images_path, ref_images_name, debug=False):
         """
         takes the path and the name of the referense images and append them to one list of comparable images
+        :param debug: for debugging
         :param ref_images_path: the path which the images are in
         :param ref_images_name: the 'first name' of this type of images
         :return: return the referense list of images
         """
+        # print("ref image list")#########################################################################################
         reference_images = []
         for i in range(1, 27):
             try:
                 image = Image.open('{}{} {}.jpg'.format(ref_images_path, ref_images_name, i))
+                # print(image)################################################################################################
+                # image.show()############################################################################################
                 reference_images.append(image)
             except FileNotFoundError:
+                if debug:
+                    print("could not find the picture from the path {}{} {}.jpg".format(ref_images_path, ref_images_name, i))
                 break
         return reference_images
 
@@ -194,4 +221,4 @@ class Pictures:
         :param pre_name: the image name
         :return: None
         """
-        image.save('{}{} {}.jpg'.format(path, str(pre_name), str(pic_num)))
+        image.save('t {}{} {}.jpg'.format(path, str(pre_name), str(pic_num)))
