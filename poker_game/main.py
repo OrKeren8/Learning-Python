@@ -19,7 +19,6 @@ pic = Pictures()
 def start_game():
     m.click_mouse(dic_of_buttons['select table'])
     m.click_mouse(dic_of_buttons['5k payment'])
-    # m.click_mouse(dic_of_buttons['game play time - normal'])
     m.click_mouse(dic_of_buttons['play now'])
 
 def print_new_cards(hand_card_index, desk_card_index):
@@ -27,13 +26,11 @@ def print_new_cards(hand_card_index, desk_card_index):
     function which print the value of the cards on the desk only if ocured a change in the cards
     :return: ---
     '''
-    # print("momo 1")##############################################################################################
     cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
     first_hand_card = [[None, None]]
     full = False
     collect_desk = True
     while True:
-        # print("momo 2")  ##########################################################################################
         current_cards = pic.check_deck_cards("desk", 5)
         current_first_hand_card = pic.check_deck_cards("1 hand", 1)
         if current_first_hand_card != [[None, None]] and current_first_hand_card != first_hand_card:
@@ -59,11 +56,8 @@ def print_new_cards(hand_card_index, desk_card_index):
                 collect_desk = True
                 full = False
         else:
-            # print("momo 3")  ########################################################################################
             for index in range(5):
-                # print(current_cards[index])###################################################################
                 if cards[index] != current_cards[index]:
-                    # print("momo 4")  ##########################################################
                     if current_cards[0] != [None, None] and current_cards[1] != [None, None] and current_cards[2] != [None, None]:
                         cards = current_cards
                         if cards[4] != [None, None]:
@@ -75,20 +69,30 @@ def print_new_cards(hand_card_index, desk_card_index):
 # print_new_cards(int(input("last hand number")), int(input("last desk number")))
 
 
-
-def koko():
+'''
+def koko(card_type, card_type_2, treshold, black_or_white):
 
     i = -1
-    while True:
+    error_index = 0
+    while error_index < 1000:
         i += 1
         try:
-            momo = Image.open('images/desk nums/t desk num {}.jpg'.format(str(i)))
-            image_index = pic.check_similarity(momo, pic.ref_image_list('images/desk nums/', 'desk num'), 220, black_and_white=True)
-            pic.save_photo(momo, 'images/sorted desk nums/{}/'.format(image_index + 1), 'desk num', i)
+            momo = Image.open('images/{} {}s/t {} {} {}.jpg'.format(card_type,card_type_2, card_type, card_type_2, str(i)))
+            image_index = pic.check_similarity(momo, pic.ref_image_list('images/{} {}s/'.format(card_type, card_type_2), '{} {}'.format(card_type, card_type_2)), treshold, black_and_white=black_or_white)
+            pic.save_photo(momo, 'images/sorted {} {}s/{}/'.format(card_type, card_type_2, image_index + 1), '{} {}'.format(card_type, card_type_2), i)
         except FileNotFoundError:
             print(i)
+            error_index += 1
 
 
 
-koko()
-# print( pic.ref_image_list('images/desk nums/', 'desk num'))
+koko('desk', 'num', 220, True)
+koko('desk', 'shape', 70, False)
+
+koko('1 hand', 'num', 300, True)
+koko('1 hand', 'shape', 150, False)
+
+koko('2 hand', 'num', 300, True)
+koko('2 hand', 'shape', 150, False)
+
+'''
