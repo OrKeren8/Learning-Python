@@ -77,6 +77,7 @@ def print_new_cards(hand_card_index, desk_card_index):
 
 
 def koko():
+
     i = -1
     while True:
         i += 1
