@@ -139,9 +139,9 @@ class Pictures:
         for pic in pic_list:
             card[0] = self.check_similarity(pic[0], self.ref_image_list(self.cards['{} num path'.format(card_type)], self.cards['{} num name'.format(card_type)]), self.cards['{} num thresh hold'.format(card_type)], black_and_white=True)
             # pic[0].show()############################################################################################
-            # print("from check_desk_card: the value od the number card: {}".format(card[0]))#####################################################
+            # print("from check_desk_card: the value od the number card: {}".format(card[0]))###########################
             card[1] = self.check_similarity(pic[1], self.ref_image_list(self.cards['{} shape path'.format(card_type)], self.cards['{} shape name'.format(card_type)]),self.cards['{} shape thresh hold'.format(card_type)])
-            # print("from check_desk_card: the value of the shape card: {}".format(card[1]))######################################################
+            # print("from check_desk_card: the value of the shape card: {}".format(card[1]))############################
             # pic[1].show()#############################################################################################
             if card[0] != 101 and card[1] != 101:
                 if debug:
@@ -161,13 +161,13 @@ class Pictures:
         :param ref_images_name: the 'first name' of this type of images
         :return: return the referense list of images
         """
-        # print("ref image list")#########################################################################################
+        # print("ref image list")#######################################################################################
         reference_images = []
         for i in range(1, 27):
             try:
                 image = Image.open('{}{} {}.jpg'.format(ref_images_path, ref_images_name, i))
-                # print(image)################################################################################################
-                # image.show()############################################################################################
+                # print(image)##########################################################################################
+                # image.show()##########################################################################################
                 reference_images.append(image)
             except FileNotFoundError:
                 if debug:
@@ -221,4 +221,4 @@ class Pictures:
         :param pre_name: the image name
         :return: None
         """
-        image.save('t {}{} {}.jpg'.format(path, str(pre_name), str(pic_num)))
+        image.save('{}t {} {}.jpg'.format(path, str(pre_name), str(pic_num)))

@@ -59,7 +59,7 @@ def print_new_cards(hand_card_index, desk_card_index):
                 collect_desk = True
                 full = False
         else:
-            # print("momo 3")  ##########################################################################################
+            # print("momo 3")  ########################################################################################
             for index in range(5):
                 # print(current_cards[index])###################################################################
                 if cards[index] != current_cards[index]:
@@ -72,9 +72,22 @@ def print_new_cards(hand_card_index, desk_card_index):
                         break
 
 
-print_new_cards(int(input("last hand number")), int(input("last desk number")))
+# print_new_cards(int(input("last hand number")), int(input("last desk number")))
 
 
-# for i in range(2000):
-#     momo = Image.open('images/all numbers/desk desk nums {}'.format(i))
-#     momo.save('images/desk nums/desk {}'.format(i))
+
+def koko():
+    i = -1
+    while True:
+        i += 1
+        try:
+            momo = Image.open('images/desk nums/t desk num {}.jpg'.format(str(i)))
+            image_index = pic.check_similarity(momo, pic.ref_image_list('images/desk nums/', 'desk num'), 220, black_and_white=True)
+            pic.save_photo(momo, 'images/sorted desk nums/{}/'.format(image_index + 1), 'desk num', i)
+        except FileNotFoundError:
+            print(i)
+
+
+
+koko()
+# print( pic.ref_image_list('images/desk nums/', 'desk num'))
