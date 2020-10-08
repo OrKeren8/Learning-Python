@@ -18,7 +18,7 @@ def main():
     except FileNotFoundError:
         print("there is no numbers.txt file")
     try:
-        with open('city.txt') as city_file:
+        with open('names.txt') as city_file:
             city = []
             for name in city_file:
                 city.append(name.strip().capitalize())
@@ -36,7 +36,7 @@ def main():
 
 def little_game():
     time.sleep(1)
-    print("lets play a little game, insert a number' i will generate an random number betwin 1 to 10 and you will try to guess the number.")
+    print("lets play a little game, i will generate a random number between 1 to 10 and you will try to guess the number.")
     try:
         user_input = input("enter you'r guess!")
         random_num = random.randint(1, 11)
@@ -84,8 +84,9 @@ def get_city():
             user_input = input('name:')
             if user_input != 'stop':
                 city_list.append(user_input.strip().capitalize())
-
                 print(city_list)
+            else:
+                print("sorted names:\n{}".format(sorted(city_list)))
     except():
         pass
 
