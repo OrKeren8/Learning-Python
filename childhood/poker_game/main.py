@@ -1,9 +1,10 @@
-from poker_game.modules.mouse import Mouse
-from poker_game.modules.pictures import Pictures
-from PIL import Image
 import random
 import time
 
+from PIL import Image
+
+from poker_game.modules.mouse import Mouse
+from poker_game.modules.pictures import Pictures
 
 dic_of_buttons = {
     'select table': (1123, 711),
@@ -16,17 +17,20 @@ dic_of_buttons = {
 m = Mouse()
 pic = Pictures()
 
+
 def start_game():
     m.click_mouse(dic_of_buttons['select table'])
     m.click_mouse(dic_of_buttons['5k payment'])
     m.click_mouse(dic_of_buttons['play now'])
+
 
 def print_new_cards(hand_card_index, desk_card_index):
     '''
     function which print the value of the cards on the desk only if ocured a change in the cards
     :return: ---
     '''
-    cards = [[None, None], [None, None], [None, None], [None, None], [None, None]]
+    cards = [[None, None], [None, None], [
+        None, None], [None, None], [None, None]]
     first_hand_card = [[None, None]]
     full = False
     collect_desk = True

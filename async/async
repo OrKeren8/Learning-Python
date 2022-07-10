@@ -1,0 +1,71 @@
+import asyncio
+import time
+from time import perf_counter
+
+
+def long_term_task(text: str) -> None:
+    """sync function - wait 2 sec and print text
+
+    return: None
+    """
+    time.sleep(2)
+    print(text)
+
+
+async def long_term_async_task(text: str) -> None:
+    """async function - wait 2 sec and print text
+
+    return: None
+    """
+    await asyncio.sleep(2)
+    print(text)
+
+
+async def to_async(function, input: str):
+    """makes a function behave as async function
+
+    return: async function
+    """
+    return await asyncio.to_thread(function, input)
+
+
+async def async_relies_on_sync(text: str):
+    time.sleep(2)
+    print(text)
+
+
+async def main() -> None:
+
+    """run sync function 2 times"""
+    time_before = perf_counter()
+    for _ in range(2):
+        long_term_task("synchronous")
+    print(f"total time (synchronous): {perf_counter() - time_before}")
+
+    """run async function 5 times"""
+    time_before = perf_counter()
+    await asyncio.gather(*[long_term_async_task("true asyncronous") for _ in range(5)])
+    print(f"total time (true asyncronous): {perf_counter() - time_before}")
+
+    """run sync function 5 times asyncly"""
+    time_before = perf_counter()
+    await asyncio.gather(
+        *[to_async(long_term_task, "pretending async") for _ in range(5)]
+    )
+    print(f"total time (pretending async): {perf_counter() - time_before}")
+
+    """run true async and pretend async together"""
+    time_before = perf_counter()
+    await asyncio.gather(to_async(long_term_task, "mix"), long_term_async_task("max"))
+    print(f"total time (async): {perf_counter() - time_before}")
+
+    """run two async functions together, but one of them relies on sync function"""
+    time_before = perf_counter()
+    await asyncio.gather(
+        async_relies_on_sync("making problems"), long_term_async_task("I am just fine")
+    )
+    print(f"total time (problems): {perf_counter() - time_before}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
