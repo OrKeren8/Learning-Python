@@ -1,0 +1,27 @@
+from dataclasses import dataclass, field
+
+@dataclass(order=True, frozen=True)
+class Person:
+    sort_index: int = field(init=False, repr=False)
+    name: str
+    job: str
+    age: int
+    strength: int = 100
+    
+    @dataclass
+    class SubClass:
+        name: str
+
+    def __post_init__(self):
+        object.__setattr__(self, 'sort_index', self.strength)
+
+person1 = Person("OR", "Keren", 30, 100)
+
+
+print(person1)
+
+sub = Person.SubClass("koko")
+x = sub.name
+print(x)
+sub.name = "momo"
+print(x)
