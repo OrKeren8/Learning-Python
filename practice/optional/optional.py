@@ -18,3 +18,37 @@ to set the var or not, eather way it will be fune
 
 in python 3.10 the | operator determine the different types of data i could get in a function
 """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
