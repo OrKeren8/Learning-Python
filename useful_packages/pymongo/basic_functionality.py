@@ -175,13 +175,11 @@ def update_person_by_id(person_id):
     from bson.objectid import ObjectId  # necessary for working with IDs, the import needs to be in the top of the file :)
 
     _id = ObjectId(person_id)  # convert ID str into ID object 
-
     all_updates = {  # the update query
         "$set": {"new_field": True},  # if there is a "new_field" field in the document it replace the old one, else create new field
         "$inc": {"age": 1},  # increment the age field by 1
         "$rename": {"first name": "first", "last name": "last"}  # rename fields
     }
-
     person_collection.update_one({"_id": _id}, all_updates)  # update only one document with a specific id
     person_collection.update_one({"_id": _id}, {"$unset": {"age": ""}})  # delete a filed from a specific document
 
@@ -189,5 +187,88 @@ def update_person_by_id(person_id):
 
 
 
+
+def replace_one(person_id):
+    """this function useful if the user wants to update all fields
+    in a document but to keep the same ID
+    
+    """
+    from bson.objectid import ObjectId  # necessary for working with IDs, the import needs to be in the top of the file :)
+
+    _id = ObjectId(person_id)  # convert ID str into ID object 
+    new_doc = {  # the new document to replace with an old one
+        "first name": "new first name",
+        "last name": "new last name",
+        "age": 100 
+    }
+    person_collection.replace_one({"_id": _id}, new_doc)
+
+# replace_one("63fe6710e519a6267e2e3b6e")
+
+
+
+
+def delete_doc_by_id(person_id):
+    """delete a document by an ID
+    
+    """
+    from bson.objectid import ObjectId  # necessary for working with IDs, the import needs to be in the top of the file :)
+    _id = ObjectId(person_id)  # convert ID str into ID object 
+    person_collection.delete_one({"_id": _id})  # delete the document
+
+# delete_doc_by_id("63fe672df92f2aba36ec5ace")
+
+
+
+
+
+# -------------------------------------------------------------#
+"""relationships"""
+# -------------------------------------------------------------#
+
+
+
+
+
+address = {
+    "_id": "63fe6710e519a6267e2e3b6d",
+    "street": "Bay Street",
+    "number": 2706,
+    "city": "San Francisco",
+    "country": "United State",
+    "zip": "94107"
+}
+
+def add_address_embed(person_id, address):
+    """add a sub dictionary as a list to existing document
+    
+    Args:   
+        person_id: the id of a document to add the dictionary to
+        address: the dictionary to add
+    """
+    from bson.objectid import ObjectId  # necessary for working with IDs, the import needs to be in the top of the file :)
+    _id = ObjectId(person_id)  # convert ID str into ID object 
+    person_collection.update_one({"_id": _id}, {"$addToSet": {"addresses": address}})  # add address to the document, if there is an address before it will append this one aside
+
+# add_address_embed("63fe6710e519a6267e2e3b6d", address)  # call to add_address_embed function
+
+
+
+
+
+def add_address_relationship(person_id, address):
+    """add a address document into address collection with the ID of its owner
+    
+    in other word create a relation ship between the person and the address!
+    """
+    from bson.objectid import ObjectId  # necessary for working with IDs, the import needs to be in the top of the file :)
+    _id = ObjectId(person_id)  # convert ID str into ID object 
+    
+    address = address.copy()  # because list is pass by reference
+    address['owner_id'] = person_id  # the relation ship between the person ID to the address
+    address_collection = production.address  # get the address collection, if there is no "address" collection, create one
+    address_collection.insert_one(address)  # insert new document
+
+add_address_relationship("63fe6710e519a6267e2e3b6d", address)  # call add_address_relationship
 
 
