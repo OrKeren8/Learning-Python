@@ -1,10 +1,10 @@
 import json
-from typing import Dict
+from typing import Dict, Generator
 import sys
 
 weights = {"rock": 2, "paper": 1, "scissors": 0}
 
-def results(results_filename):
+def results(results_filename) -> Generator[str, None, None]:
     try:
         with open(results_filename, 'r', encoding='utf-8') as results_file:
             good_header = "player1 player1-choice player2 player2-choice\n"
@@ -17,7 +17,7 @@ def results(results_filename):
         print(f"file does not exist: {e}")
         sys.exit()
 
-def game(results_filename):
+def game(results_filename) -> str:
     scores: Dict[str, int] = {}
     print(f'starting the game with {results_filename}')
     for result in results(results_filename):
