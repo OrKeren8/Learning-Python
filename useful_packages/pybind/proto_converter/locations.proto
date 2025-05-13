@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+
+message Coordinates {
+    double lon = 1;
+    double lat = 2;
+}
+
+message LocationData {
+    repeated Coordinates polygon = 1;
+    bool type = 2;
+    int32 azimuth = 3;
+}
