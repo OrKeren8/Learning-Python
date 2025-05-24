@@ -2,13 +2,34 @@ import time
 import json
 import pandas as pd
 from pandas import DataFrame
-
+import numpy as np
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
 from typing import List
 
 
+def euclidean_distance(x: np.ndarray, y: np.ndarray) -> float:
+    """calculate the euclidian distnace between two n-dimensional vectors
+    Args:
+        x (np.ndarray): first vector
+        y (np.ndarray): second vector
+    Returns:
+        float: euclidean distance between x and y
+    """
+    return np.sqrt(np.sum((x - y) ** 2))
+
+def scale_features(df: DataFrame) -> DataFrame:
+    """Scale the features of the dataframe using StandardScaler
+    Args:
+        df (DataFrame): input dataframe with features to be scaled
+    Returns:
+        DataFrame: scaled dataframe
+    """
+    scalar = StandardScaler()
+    data_scaled = pd.DataFrame(scalar.fit_transform(df))
+    return data_scaled
+
 def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
-    # todo: implement this function
     #  the data_tst dataframe should only(!) be used for the final predictions your return
     print(f'starting classification with {data_trn}, {data_vld}, predicting on {len(df_tst)} instances')
 
@@ -16,8 +37,7 @@ def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
     return predictions
 
 
-# todo: fill in your student ids
-students = {'id1': '000000000', 'id2': '000000000'}
+students = {'id1': '315155531', 'id2': '000000000'}
 
 if __name__ == '__main__':
     start = time.time()
