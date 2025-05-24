@@ -18,16 +18,6 @@ class NearestNeighbor:
         self.x_train = x_train.to_numpy()
         self.y_train = y_train
 
-    def euclidean_distance(self, x: np.ndarray, y: np.ndarray) -> float:
-        """calculate the euclidean distance between two n-dimensional vectors
-        Args:
-            x (np.ndarray): first vector
-            y (np.ndarray): second vector
-        Returns:
-            float: euclidean distance between x and y
-        """
-        return np.sqrt(np.sum((x - y) ** 2))
-
     def _get_nearest_neighbors_class(self, origin: np.ndarray, radius: float):
         """Get the class of the nearest neighbors within a given radius
         Args:
@@ -96,20 +86,17 @@ def upload_data(data_file: str) -> DataFrame:
     return df
 
 def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
-    #  the data_tst dataframe should only(!) be used for the final predictions your return
     print(f'starting classification with {data_trn}, {data_vld}, predicting on {len(df_tst)} instances')
+
     df_trn = upload_data(data_trn)
     x_train, y_train = df_trn.drop(['class'], axis=1), df_trn['class']
-    # df_trn_scaled = scale_features(df_trn.drop(['class'], axis=1))
     df_vld = upload_data(data_vld)
     x_val,  y_val = df_vld.drop(['class'], axis=1), df_vld['class']
-    # df_vld_scaled = scale_features(df_vld.drop(['class'], axis=1))
 
     nn = NearestNeighbor(x_train, y_train)
-    radius = nn.check_best_radius(x_val, y_val, start=1, end=200, jump=10)
-
-    df_tst_scaled = scale_features(df_tst)
-    predictions = nn.predict(df_tst_scaled, radius)
+    radius = nn.check_best_radius(x_val, y_val, start=15, end=35, jump=1)
+    print(f'Best radius found: {radius}')
+    predictions = nn.predict(df_tst, radius)
 
     return predictions
 
