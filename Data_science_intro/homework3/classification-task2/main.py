@@ -7,16 +7,59 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from typing import List
 
+class NearestNeighbor:
 
-def euclidean_distance(x: np.ndarray, y: np.ndarray) -> float:
-    """calculate the euclidian distnace between two n-dimensional vectors
-    Args:
-        x (np.ndarray): first vector
-        y (np.ndarray): second vector
-    Returns:
-        float: euclidean distance between x and y
-    """
-    return np.sqrt(np.sum((x - y) ** 2))
+    def __init__(self, x_train: DataFrame, y_train: pd.Series):
+        """Initialize the NearestNeighbor classifier with training data
+        Args:
+            x_train (DataFrame): training features
+            y_train (pd.Series): training labels
+        """
+        self.x_train = x_train.to_numpy()
+        self.y_train = y_train
+
+    def euclidean_distance(self, x: np.ndarray, y: np.ndarray) -> float:
+        """calculate the euclidean distance between two n-dimensional vectors
+        Args:
+            x (np.ndarray): first vector
+            y (np.ndarray): second vector
+        Returns:
+            float: euclidean distance between x and y
+        """
+        return np.sqrt(np.sum((x - y) ** 2))
+
+    def _get_nearest_neighbors_class(self, origin: np.ndarray, radius: float):
+        """Get the class of the nearest neighbors within a given radius
+        Args:
+            origin (np.ndarray): the point for which to find the nearest neighbors
+            radius (float): radius within which to consider neighbors
+        Returns:
+            str: class of the nearest neighbor, or None if no neighbors found"""
+        neighbors = dict()
+        for i in range(len(self.x_train)):
+            distances = self.euclidean_distance(origin, self.x_train[i])
+            if distances <= radius:
+                neighbors[self.y_train[i]] = neighbors.get(self.y_train[i], 0) + 1
+        max_key, max_val = "", 0
+        for key, val in neighbors.items():
+            if val > max_key:
+                max_key = key
+                max_val = val
+        return max_key if max_val > 0 else None
+    
+    def predict(self, data: DataFrame, radius: float = 1):
+        """Predict the class of each instance in the data using the nearest neighbor algorithm
+        Args:
+            data (DataFrame): input data for which to predict the class
+            radius (float): radius within which to consider neighbors
+        Returns:
+            List: list of predicted classes for each instance in the data
+        """
+        predictions = []
+        np_data = data.to_numpy()
+        for row in np_data:
+            predictions.append(self._get_nearest_neighbors_class(row, radius))
+        return predictions
 
 def scale_features(df: DataFrame) -> DataFrame:
     """Scale the features of the dataframe using StandardScaler
@@ -29,9 +72,27 @@ def scale_features(df: DataFrame) -> DataFrame:
     data_scaled = pd.DataFrame(scalar.fit_transform(df))
     return data_scaled
 
+def upload_data(data_file: str) -> DataFrame:
+    """Load data from a CSV file into a DataFrame
+    Args:
+        data_file (str): path to the CSV file
+    Returns:
+        DataFrame: loaded data
+    """
+    df = pd.read_csv(data_file)
+    return df
+
 def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
     #  the data_tst dataframe should only(!) be used for the final predictions your return
     print(f'starting classification with {data_trn}, {data_vld}, predicting on {len(df_tst)} instances')
+    df_trn = upload_data(data_trn)
+    df_vld = upload_data(data_vld)
+    df_trn_scaled = scale_features(df_trn.drop(['class'], axis=1))
+    df_vld_scaled = scale_features(df_vld.drop(['class'], axis=1))
+    df_tst = scale_features(df_tst)
+
+    nn = NearestNeighbor(df_trn, df_trn['class'])
+    nn.predict(df_vld_scaled, radius=1)
 
     predictions = list()  # todo: return a list of your predictions for test instances
     return predictions
