@@ -9,48 +9,46 @@ from typing import List
 
 class NearestNeighbor:
 
-    def __init__(self, x_train: DataFrame, y_train: pd.Series):
+    def __init__(self, x_train: DataFrame, y_train: pd.Series, x_vld: DataFrame, y_vld: pd.Series):
         """Initialize the NearestNeighbor classifier with training data
         Args:
             x_train (DataFrame): training features
             y_train (pd.Series): training labels
         """
         self.x_train = x_train.to_numpy()
-        self.y_train = y_train
+        self.y_train = y_train.to_numpy()
+        self.x_vld = x_vld.to_numpy()
+        self.y_vld = y_vld.to_numpy()
+        self.fit_distances = self.pre_calc_distances()
 
-    def _get_nearest_neighbors_class(self, origin: np.ndarray, radius: float):
-        """Get the class of the nearest neighbors within a given radius
-        Args:
-            origin (np.ndarray): the point for which to find the nearest neighbors
-            radius (float): radius within which to consider neighbors
-        Returns:
-            str: class of the nearest neighbor, or None if no neighbors found"""
-        distances = np.linalg.norm(self.x_train - origin, axis=1)
+    def pre_calc_distances(self):
+        distances = []
+        for row in self.x_vld:
+            distances.append(self._calc_distances(row))
+        return np.array(distances)
+    
+    def _calc_distances(self, origin: np.ndarray):
+        return np.linalg.norm(self.x_train - origin, axis=1)
+    
+    def _get_nearest_neighbors_class(self, origin: np.ndarray, radius: float, pre_dist_idx: int = -1):
+        distances = self.fit_distances[pre_dist_idx] if pre_dist_idx > 0 else self._calc_distances(origin)
         within_radius = distances <= radius
         labels_within = self.y_train[within_radius]
         values, counts = np.unique(labels_within, return_counts=True)
         return values[np.argmax(counts)] if counts.size > 0 else self.y_train[0]
         
-    def check_best_radius(self, data_set: DataFrame, predicted: pd.Series, start: int, end: int, jump = 1) -> int:
-        """Find the best radius for the nearest neighbor algorithm
-        Args:
-            data_set (DataFrame): input data to find the best radius
-            start (int): starting radius value
-            end (int): ending radius value
-            jump (int): step size for radius values
-        Returns:
-            int: best radius found
-        """
-        best = 0
-        for radius in range(start, end, jump):
-            predictions = self.predict(data_set, radius)
-            accuracy = accuracy_score(predicted, predictions)
-            if accuracy > best:
-                best = radius
-            print(f'Radius: {radius}, Accuracy: {accuracy}')
-        return best
+    def check_best_radius(self, start: float, end: float, jump) -> float:
+        best_acc, best_rad = 0, 0
+        for radius in np.arange(start, end, jump):
+            predictions = self.predict(self.x_vld, radius, from_fit=True)
+            accuracy = accuracy_score(self.y_vld, predictions)
+            if accuracy > best_acc:
+                best_acc = accuracy
+                best_rad = radius
+            print(f'Radius: {radius}, Accuracy: {accuracy}, Best so far: {best_rad}')
+        return best_rad
 
-    def predict(self, data: DataFrame, radius: float = 1):
+    def predict(self, np_data: np.ndarray, radius: float = 1, from_fit: bool = False) -> List:
         """Predict the class of each instance in the data using the nearest neighbor algorithm
         Args:
             data (DataFrame): input data for which to predict the class
@@ -59,9 +57,8 @@ class NearestNeighbor:
             List: list of predicted classes for each instance in the data
         """
         predictions = []
-        np_data = data.to_numpy()
-        for row in np_data:
-            predictions.append(self._get_nearest_neighbors_class(row, radius))
+        for i in range(len(np_data)):
+            predictions.append(self._get_nearest_neighbors_class(np_data[i], radius, i if from_fit else -1))
         return predictions
 
 def scale_features(df: DataFrame) -> DataFrame:
@@ -87,16 +84,16 @@ def upload_data(data_file: str) -> DataFrame:
 
 def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
     print(f'starting classification with {data_trn}, {data_vld}, predicting on {len(df_tst)} instances')
-
+    df_tst = scale_features(df_tst)
     df_trn = upload_data(data_trn)
-    x_train, y_train = df_trn.drop(['class'], axis=1), df_trn['class']
+    x_train, y_train = scale_features(df_trn.drop(['class'], axis=1)), df_trn['class']
     df_vld = upload_data(data_vld)
-    x_val,  y_val = df_vld.drop(['class'], axis=1), df_vld['class']
+    x_val,  y_val = scale_features(df_vld.drop(['class'], axis=1)), df_vld['class']
 
-    nn = NearestNeighbor(x_train, y_train)
-    radius = nn.check_best_radius(x_val, y_val, start=15, end=35, jump=1)
+    nn = NearestNeighbor(x_train, y_train, x_val, y_val)
+    radius = nn.check_best_radius(start=1, end=4, jump=0.1)
     print(f'Best radius found: {radius}')
-    predictions = nn.predict(df_tst, radius)
+    predictions = nn.predict(df_tst.to_numpy(), radius)
 
     return predictions
 
