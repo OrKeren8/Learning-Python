@@ -45,8 +45,27 @@ class NearestNeighbor:
             if val > max_key:
                 max_key = key
                 max_val = val
-        return max_key if max_val > 0 else None
-    
+        return max_key if max_val > 0 else None\
+        
+    def check_best_radius(self, data_set: DataFrame, start: int, end: int, jump = 1) -> int:
+        """Find the best radius for the nearest neighbor algorithm
+        Args:
+            data_set (DataFrame): input data to find the best radius
+            start (int): starting radius value
+            end (int): ending radius value
+            jump (int): step size for radius values
+        Returns:
+            int: best radius found
+        """
+        best = 0
+        for radius in range(start, end, jump):
+            predictions = self.predict(data_set, radius)
+            accuracy = accuracy_score(data_set['class'], predictions)
+            if accuracy > best:
+                best = radius
+            print(f'Radius: {radius}, Accuracy: {accuracy}')
+        return best
+
     def predict(self, data: DataFrame, radius: float = 1):
         """Predict the class of each instance in the data using the nearest neighbor algorithm
         Args:
@@ -86,15 +105,16 @@ def classify_with_NNR(data_trn: str, data_vld: str, df_tst: DataFrame) -> List:
     #  the data_tst dataframe should only(!) be used for the final predictions your return
     print(f'starting classification with {data_trn}, {data_vld}, predicting on {len(df_tst)} instances')
     df_trn = upload_data(data_trn)
-    df_vld = upload_data(data_vld)
     df_trn_scaled = scale_features(df_trn.drop(['class'], axis=1))
+    df_vld = upload_data(data_vld)
     df_vld_scaled = scale_features(df_vld.drop(['class'], axis=1))
-    df_tst = scale_features(df_tst)
 
     nn = NearestNeighbor(df_trn, df_trn['class'])
-    nn.predict(df_vld_scaled, radius=1)
+    radius = nn.check_best_radius(df_vld_scaled, start=1, end=10, jump=1)
 
-    predictions = list()  # todo: return a list of your predictions for test instances
+    df_tst_scaled = scale_features(df_tst)
+    predictions = nn.predict(df_tst_scaled, radius)
+
     return predictions
 
 
