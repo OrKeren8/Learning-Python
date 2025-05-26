@@ -14,3 +14,6 @@ class FactOfMinusError(CalculatorException):
     def __init__(self):
         super().__init__("Error while performing operation Factorial: not supported for the negative number", status_code=409)
 
+class InputError(CalculatorException):
+    def __init__(self, msg):
+        super().__init__(msg, status_code=409)

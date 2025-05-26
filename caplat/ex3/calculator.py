@@ -1,4 +1,4 @@
-from exceptions import DivisionByZeroError, FactOfMinusError
+from exceptions import DivisionByZeroError, FactOfMinusError, InputError
 from models import CalculateRequest
 
 
@@ -15,8 +15,17 @@ class Calculator:
             'absolute': Calculator.absolute,
             'factorial': Calculator.factorial
         }
-        return operations[req.operation](*req.arguments)
-
+        func = operations[req.operation.lower()]
+        arg_count = func.__code__.co_argcount
+        if arg_count < len(req.arguments):
+            raise InputError(f"Not enough arguments to perform the operation {req.operation}")
+        elif arg_count > len(req.arguments):
+            raise InputError(f"Too many arguments to perform the operation {req.operation}")
+        try:
+            return func(*req.arguments)
+        except KeyError:
+            raise InputError(f"unknown operation: {req.operation}")
+    
     @staticmethod
     def add(x: int, y: int) -> int:
         return x + y
