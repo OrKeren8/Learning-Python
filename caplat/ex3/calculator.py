@@ -15,16 +15,17 @@ class Calculator:
             'absolute': Calculator.absolute,
             'factorial': Calculator.factorial
         }
-        func = operations[req.operation.lower()]
-        arg_count = func.__code__.co_argcount
-        if arg_count < len(req.arguments):
-            raise InputError(f"Not enough arguments to perform the operation {req.operation}")
-        elif arg_count > len(req.arguments):
-            raise InputError(f"Too many arguments to perform the operation {req.operation}")
         try:
-            return func(*req.arguments)
+            func = operations[req.operation.lower()]
         except KeyError:
             raise InputError(f"unknown operation: {req.operation}")
+        arg_count = func.__code__.co_argcount
+        if arg_count > len(req.arguments):
+            raise InputError(f"Not enough arguments to perform the operation {req.operation}")
+        elif arg_count < len(req.arguments):
+            raise InputError(f"Too many arguments to perform the operation {req.operation}")
+        return func(*req.arguments)
+        
     
     @staticmethod
     def add(x: int, y: int) -> int:
