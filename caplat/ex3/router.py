@@ -1,7 +1,8 @@
+from typing import Optional
 from fastapi import APIRouter
 
 from calculator import Calculator
-from models import CalculateRequest, Response
+from models import CalculateRequest, Response, HistoryResponse
 from exceptions import CalculatorException
 
 
@@ -45,3 +46,11 @@ async def delete_stack_arguments(count: int) -> Response:
         return Response(result=curr_size, errorMessage=None)
     except CalculatorException as e:
         return Response(result=None, errorMessage=e.message)
+
+@calc_router.get("/history")
+async def get_history(flavor: Optional[str] = None) -> HistoryResponse:
+    try:
+        res = calculator.get_operations_history(flavor)
+        return HistoryResponse(result=res, errorMessage=None)
+    except CalculatorException as e:
+        return HistoryResponse(result=None, errorMessage=e.message)

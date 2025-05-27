@@ -1,6 +1,6 @@
 from typing import Optional
 from exceptions import DivisionByZeroError, FactOfMinusError, InputError
-from models import CalculateRequest
+from models import CalculateRequest, Operation
 from collections import deque
 
 
@@ -8,10 +8,25 @@ class Calculator:
 
     def __init__(self):
         self._stack = deque()
+        self._operations_history = []
 
     @property
     def stack_size(self) -> int:
         return len(self._stack)
+    
+    def get_operations_history(self, flavor: Optional[str] = None) -> list[Operation]:
+        match flavor:
+            case None:
+                return self._operations_history
+            case "INDEPENDENT":
+                return [op for op in self._operations_history if op.flavor == "INDEPENDENT"]        
+            case "STACK":
+                return [op for op in self._operations_history if op.flavor == "STACK"]
+            case _:
+                raise InputError(f"Unknown flavor: {flavor}. Supported flavors are: INDEPENDENT, STACK")
+
+    def add_op_history(self, operation: str, arguments: list, result: int, flavor: str) -> None:
+        self._operations_history.append(Operation(flavor=flavor, operation=operation, arguments=arguments, result=result))
     
     def get_stack_args(self, count: int) -> list:
         if count > len(self._stack):
@@ -33,9 +48,10 @@ class Calculator:
         except InputError as e:
             raise InputError(f"Error: cannot implement operation {operation}. It requires {e.message} arguments and the stack has only {self.stack_size} arguments")
         req = CalculateRequest(arguments=args, operation=operation)
-        return self.calculate(req)
+        res = self.calculate(req, "STACK")
+        return res
 
-    def calculate(self, req: Optional[CalculateRequest]) -> int:
+    def calculate(self, req: CalculateRequest, source: str="INDEPENDENT") -> int:
         operations = {
             'plus': self.add,
             'minus': self.subtract,
@@ -54,7 +70,9 @@ class Calculator:
             raise InputError(f"Not enough arguments to perform the operation {req.operation}")
         elif arg_count < len(req.arguments):
             raise InputError(f"Too many arguments to perform the operation {req.operation}")
-        return func(*req.arguments)
+        res = func(*req.arguments)
+        self.add_op_history(req.operation, req.arguments, res, source)
+        return res
         
     def add(self, x: int, y: int) -> int:
         return x + y
