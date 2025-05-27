@@ -7,4 +7,4 @@ class Response(BaseModel):
 
 class CalculateRequest(BaseModel):
     arguments: List[int]
-    operation: str
+    operation: Optional[str] = None
