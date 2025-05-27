@@ -4,7 +4,6 @@ from models import CalculateRequest
 from collections import deque
 
 
-
 class Calculator:
 
     def __init__(self):
@@ -29,7 +28,7 @@ class Calculator:
         req = CalculateRequest(arguments=args, operation=operation)
         return self.calculate(req)
 
-    def calculate(self, req: Optional[CalculateRequest] = None) -> int:
+    def calculate(self, req: Optional[CalculateRequest]) -> int:
         operations = {
             'plus': self.add,
             'minus': self.subtract,
