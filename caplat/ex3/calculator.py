@@ -19,6 +19,13 @@ class Calculator:
         args = [self._stack.pop() for _ in range(count)]
         return args
 
+    def pop_stack_args(self, count: int) -> int:
+        if count > self.stack_size:
+            raise InputError(f"Error: cannot remove {count} from the stack. It has only {self.stack_size} arguments")
+        for _ in range(count):
+            self._stack.pop()
+        return self.stack_size
+
     def calculate_from_stack(self, operation: str) -> int:
         args_count = 1 if operation.lower() == 'abs' else 2
         try:

@@ -37,3 +37,11 @@ async def operate_stack(operation: str) -> Response:
         return Response(result=res, errorMessage=None)
     except CalculatorException as e:
         return Response(result=None, errorMessage=e.message)
+    
+@calc_router.delete("/stack/arguments")
+async def delete_stack_arguments(count: int) -> Response:
+    try:
+        curr_size = calculator.pop_stack_args(count)
+        return Response(result=curr_size, errorMessage=None)
+    except CalculatorException as e:
+        return Response(result=None, errorMessage=e.message)
