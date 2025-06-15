@@ -23,38 +23,50 @@ async def independent_calculation(req: CalculateRequest) -> Response:
         return Response(result=None, errorMessage=e.message)
     
 @calc_router.get("/stack/size")
-async def get_stack_size(req: Request):
+async def get_stack_size(req_metadata: Request):
     res = Response(result=calculator.stack_size, errorMessage=None)
-    Deps.get_stack_logger(req.state.request_id).info(f"Stack size is {calculator.stack_size}")
-    Deps.get_stack_logger(req.state.request_id).debug(f"Stack content (first == top): [{calculator.get_stack_content()}]")
+    Deps.get_stack_logger(req_metadata.state.request_id).info(f"Stack size is {calculator.stack_size}")
+    Deps.get_stack_logger(req_metadata.state.request_id).debug(f"Stack content (first == top): [{calculator.get_stack_content()}]")
     return res
 
 @calc_router.put("/stack/arguments")
-async def put_stack_arguments(req: CalculateRequest) -> Response:
+async def put_stack_arguments(req: CalculateRequest, req_metadata: Request) -> Response:
+    before_size = calculator.stack_size
+    total_args = len(req.arguments)
     for arg in req.arguments:
         calculator._stack.append(arg)
+    Deps.get_stack_logger(req_metadata.state.request_id).info(f"Adding total of {total_args} argument(s) to the stack | Stack size: {calculator.stack_size}")
+    args = ", ".join(str(x) for x in req.arguments)
+    Deps.get_stack_logger(req_metadata.state.request_id).debug(f"Adding arguments: {args} | Stack size before {before_size} | stack size after {calculator.stack_size}")
     return Response(result=len(calculator._stack), errorMessage=None)
 
 @calc_router.get("/stack/operate")
-async def operate_stack(operation: str) -> Response:
+async def operate_stack(operation: str, req_metadata: Request) -> Response:
     try:
-        res = calculator.calculate_from_stack(operation)
+        res, args_str = calculator.calculate_from_stack(operation)
+        Deps.get_stack_logger(req_metadata.state.request_id).info(f"Performing operation {operation.lower()}. Result is {res} | stack size: {calculator.stack_size}")
+        Deps.get_stack_logger(req_metadata.state.request_id).debug(f"Performing operation: {operation.lower()}({args_str}) = {res}")
         return Response(result=res, errorMessage=None)
     except CalculatorException as e:
         return Response(result=None, errorMessage=e.message)
     
 @calc_router.delete("/stack/arguments")
-async def delete_stack_arguments(count: int) -> Response:
+async def delete_stack_arguments(count: int, req_metadata: Request) -> Response:
     try:
         curr_size = calculator.pop_stack_args(count)
+        Deps.get_stack_logger(req_metadata.state.request_id).info(f"Removing total {count} argument(s) from the stack | Stack size: {curr_size}")
         return Response(result=curr_size, errorMessage=None)
     except CalculatorException as e:
         return Response(result=None, errorMessage=e.message)
 
 @calc_router.get("/history")
-async def get_history(flavor: Optional[str] = None) -> HistoryResponse:
+async def get_history(req_metadata: Request, flavor: Optional[str] = None) -> HistoryResponse:
     try:
         res = calculator.get_operations_history(flavor)
+        total_actions = len(res)
+        if not flavor:
+            total_actions = len(calculator.get_operations_history("STACK"))
+        Deps.get_stack_logger(req_metadata.state.request_id).info(f"History: So far total {total_actions} stack actions")
         return HistoryResponse(result=res, errorMessage=None)
     except CalculatorException as e:
         return HistoryResponse(result=None, errorMessage=e.message)

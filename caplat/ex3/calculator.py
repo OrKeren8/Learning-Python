@@ -46,7 +46,7 @@ class Calculator:
             self._stack.pop()
         return self.stack_size
 
-    def calculate_from_stack(self, operation: str) -> int:
+    def calculate_from_stack(self, operation: str):
         args_count = 1 if (operation.lower() == 'abs' or operation.lower() == 'fact') else 2
         try:
             args = self.get_stack_args(args_count)
@@ -54,7 +54,8 @@ class Calculator:
             raise InputError(f"Error: cannot implement operation {operation}. It requires {e.message} arguments and the stack has only {self.stack_size} arguments")
         req = CalculateRequest(arguments=args, operation=operation)
         res = self.calculate(req, "STACK")
-        return res
+        args_str = ", ".join(str(x) for x in args)
+        return res, args_str
 
     def calculate(self, req: CalculateRequest, source: str="INDEPENDENT") -> int:
         operations = {
