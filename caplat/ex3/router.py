@@ -25,7 +25,8 @@ async def independent_calculation(req: CalculateRequest) -> Response:
 @calc_router.get("/stack/size")
 async def get_stack_size(req: Request):
     res = Response(result=calculator.stack_size, errorMessage=None)
-    Deps.get_stack_logger(req.state.request_id).debug(f"Stack size is {calculator.stack_size}")
+    Deps.get_stack_logger(req.state.request_id).info(f"Stack size is {calculator.stack_size}")
+    Deps.get_stack_logger(req.state.request_id).debug(f"Stack content (first == top): [{calculator.get_stack_content()}]")
     return res
 
 @calc_router.put("/stack/arguments")

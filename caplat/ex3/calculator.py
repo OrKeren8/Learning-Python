@@ -14,6 +14,11 @@ class Calculator:
     def stack_size(self) -> int:
         return len(self._stack)
     
+    def get_stack_content(self) -> str:
+        if not self._stack:
+            return ""
+        return ", ".join(str(x) for x in self._stack)
+    
     def get_operations_history(self, flavor: Optional[str] = None) -> list[Operation]:
         match flavor:
             case None:
