@@ -1,9 +1,10 @@
 from typing import Optional
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from calculator import Calculator
 from models import CalculateRequest, Response, HistoryResponse
 from exceptions import CalculatorException
+from deps import Deps
 
 
 calc_router = APIRouter(prefix="/calculator")
@@ -22,8 +23,10 @@ async def independent_calculation(req: CalculateRequest) -> Response:
         return Response(result=None, errorMessage=e.message)
     
 @calc_router.get("/stack/size")
-async def get_stack_size():
-    return Response(result=calculator.stack_size, errorMessage=None)
+async def get_stack_size(req: Request):
+    res = Response(result=calculator.stack_size, errorMessage=None)
+    Deps.get_stack_logger(req.state.request_id).debug(f"Stack size is {calculator.stack_size}")
+    return res
 
 @calc_router.put("/stack/arguments")
 async def put_stack_arguments(req: CalculateRequest) -> Response:
