@@ -42,7 +42,7 @@ class Calculator:
         return self.stack_size
 
     def calculate_from_stack(self, operation: str) -> int:
-        args_count = 1 if operation.lower() == 'abs' else 2
+        args_count = 1 if (operation.lower() == 'abs' or operation.lower() == 'fact') else 2
         try:
             args = self.get_stack_args(args_count)
         except InputError as e:
