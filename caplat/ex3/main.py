@@ -1,14 +1,17 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from router import calc_router
 import uvicorn
+
 from deps import Deps
+from routers.calculator_router import calc_router
+from routers.logs_router import logs_router
 from timeit import default_timer as timer
 import timeit
 
 app = FastAPI()
 
 app.include_router(calc_router)
+app.include_router(logs_router)
 
 app.add_middleware(
     CORSMiddleware,
