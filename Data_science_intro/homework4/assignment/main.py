@@ -27,7 +27,7 @@ def calc_cluster_centroid(cluster, features):
 
 
 def cluster_data(features_file, min_cluster_size, iterations=10):
-    min_similarity = 0.6
+    min_similarity = 0.74
     print(f'starting clustering images in file {features_file}')
     cluster2filenames = dict()
     centroids = dict()
