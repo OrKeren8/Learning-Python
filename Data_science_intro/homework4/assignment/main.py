@@ -27,28 +27,39 @@ def calc_cluster_centroid(cluster, features):
 
 
 def cluster_data(features_file, min_cluster_size, iterations=10):
-    min_similarity = 0.8
+    min_similarity = 0.6
     print(f'starting clustering images in file {features_file}')
     cluster2filenames = dict()
     centroids = dict()
     img_features = load_from_pickle(features_file)
+    images = dict()
     
-    for img_key, img in img_features.items():
-        max_similarity = 0
-        closest_centroid_key = None
-        for centroid_key, centroid in centroids.items():
-            similarity = cosine(img, centroid)
-            if similarity > max_similarity and similarity > min_similarity:
-                max_similarity  = similarity
-                closest_centroid_key = centroid_key
-        if closest_centroid_key is not None:
-            cluster2filenames[closest_centroid_key].append(img_key)
-            centroids[closest_centroid_key] = calc_cluster_centroid(cluster2filenames[closest_centroid_key], img_features)
-        else:
-            print(f'adding new cluster for image {img_key}')
-            max_key = max(centroids.keys(), default=0)
-            cluster2filenames[max_key + 1] = [img_key]
-            centroids[max_key + 1] = img
+    for i in range(iterations):
+        for img_key, img in img_features.items():
+            max_similarity = 0
+            closest_centroid_cluster = None
+            for centroid_key, centroid in centroids.items():
+                similarity = cosine(img, centroid)
+                if similarity > max_similarity and similarity > min_similarity:
+                    max_similarity  = similarity
+                    closest_centroid_cluster = centroid_key
+            if closest_centroid_cluster is not None:
+                before_cluster = images.get(img_key, None)
+                if before_cluster != closest_centroid_cluster:
+                    if before_cluster is not None:
+                        cluster2filenames[before_cluster].remove(img_key)
+                        centroids[before_cluster] = calc_cluster_centroid(cluster2filenames[before_cluster], img_features)
+                        if len(cluster2filenames[before_cluster]) == 0:
+                            del cluster2filenames[before_cluster]
+                            del centroids[before_cluster]
+                    cluster2filenames[closest_centroid_cluster].append(img_key)
+                    images[img_key] = closest_centroid_cluster
+                    centroids[closest_centroid_cluster] = calc_cluster_centroid(cluster2filenames[closest_centroid_cluster], img_features)
+            else:
+                max_key = max(centroids.keys(), default=0)
+                cluster2filenames[max_key + 1] = [img_key]
+                centroids[max_key + 1] = img
+                images[img_key] = max_key + 1
     cluster2remove = set()
     for cluster in cluster2filenames:
         if len(cluster2filenames[cluster]) < min_cluster_size:
