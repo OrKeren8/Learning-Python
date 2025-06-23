@@ -27,7 +27,7 @@ def calc_cluster_centroid(cluster, features):
 
 
 def cluster_data(features_file, min_cluster_size, iterations=10):
-    min_similarity = 0.9
+    min_similarity = 0.8
     print(f'starting clustering images in file {features_file}')
     cluster2filenames = dict()
     centroids = dict()
@@ -35,12 +35,11 @@ def cluster_data(features_file, min_cluster_size, iterations=10):
     
     for img_key, img in img_features.items():
         max_similarity = 0
-        closest_centroid_similarity = 0
         closest_centroid_key = None
         for centroid_key, centroid in centroids.items():
             similarity = cosine(img, centroid)
-            if similarity > max_similarity and similarity > closest_centroid_similarity:
-                max_similarity = closest_centroid_similarity = similarity
+            if similarity > max_similarity and similarity > min_similarity:
+                max_similarity  = similarity
                 closest_centroid_key = centroid_key
         if closest_centroid_key is not None:
             cluster2filenames[closest_centroid_key].append(img_key)
@@ -50,6 +49,13 @@ def cluster_data(features_file, min_cluster_size, iterations=10):
             max_key = max(centroids.keys(), default=0)
             cluster2filenames[max_key + 1] = [img_key]
             centroids[max_key + 1] = img
+    cluster2remove = set()
+    for cluster in cluster2filenames:
+        if len(cluster2filenames[cluster]) < min_cluster_size:
+            cluster2remove.add(cluster)
+    for cluster in cluster2remove:
+        del cluster2filenames[cluster]
+        del centroids[cluster]
     return cluster2filenames
 
 
