@@ -1,7 +1,8 @@
 from typing import Optional
-from exceptions import DivisionByZeroError, FactOfMinusError, InputError
-from models import CalculateRequest, Operation
 from collections import deque
+
+from app.exceptions import DivisionByZeroError, FactOfMinusError, InputError
+from app.models import CalculateRequest, Operation
 
 
 class Calculator:

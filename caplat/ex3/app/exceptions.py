@@ -1,4 +1,4 @@
-from models import Response
+from app.models import Response
 
 class CalculatorException(Exception):
     def __init__(self, message=None, status_code=500):

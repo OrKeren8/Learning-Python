@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Query
 
-from deps import Deps
+from app.deps import Deps
 
 
 logs_router = APIRouter(prefix="/logs")

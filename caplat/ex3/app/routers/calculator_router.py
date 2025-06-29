@@ -1,10 +1,10 @@
 from typing import Optional
 from fastapi import APIRouter, Request
 
-from calculator import Calculator
-from models import CalculateRequest, Response, HistoryResponse
-from exceptions import CalculatorException
-from deps import Deps
+from app.calculator import Calculator
+from app.models import CalculateRequest, Response, HistoryResponse
+from app.exceptions import CalculatorException
+from app.deps import Deps
 
 
 calc_router = APIRouter(prefix="/calculator")
